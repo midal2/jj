@@ -9,7 +9,8 @@
     </appender>
 
     <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOGS_ABSOLUTE_PATH}/logback.log</file>
+
+    <file>${LOGS_ABSOLUTE_PATH}/logback.log</file>
         <encoder>
             <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %-5level %logger{35} - %msg%n</pattern>
         </encoder>
@@ -22,7 +23,7 @@
         </rollingPolicy>
     </appender>
 
-    <logger name="hello.jj"  level="debug" additivity="false">
+    <logger name="jj.biztrip.svc.sample"  level="debug" additivity="false">
         <appender-ref ref="ROLLING" />
     </logger>
 
