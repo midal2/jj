@@ -23,7 +23,7 @@
         </rollingPolicy>
     </appender>
 
-    <logger name="jj.biztrip.svc.sample"  level="debug" additivity="false">
+    <logger name="jj.biztrip.batch"  level="debug" additivity="true">
         <appender-ref ref="ROLLING" />
     </logger>
 

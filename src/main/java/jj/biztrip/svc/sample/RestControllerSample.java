@@ -7,13 +7,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
+@RequestMapping("test/")
 public class RestControllerSample {
 
-    Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+    private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
     @RequestMapping("/")
     public String index() {
         logger.debug("로그기록!!!!!");
-        return "테스트 스프링 실행3333";
+        return "테스트 스프링 실행444";
     }
 }
