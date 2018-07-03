@@ -33,7 +33,7 @@ public class HttpBizService implements BizService<Map<String, Object>> {
 
     @Override
     public Map<String, Object> send(String url, String sendStr, BizServiceType type, String etcInfo) {
-        Map<String, Object> resultMap = new HashMap<String, Object>();
+        Map<String, Object> resultMap = new HashMap();
 
         try {
             logger.info("Trying Connect... URL[" + url + "][DATA][" + sendStr+ "]");
@@ -81,7 +81,6 @@ public class HttpBizService implements BizService<Map<String, Object>> {
                 logger.info("RECEIVE[" + temp +"]");
                 ObjectMapper om = new ObjectMapper();
                 resultMap = getResultMap(temp, type, etcInfo);
-//                resultMap = om.readValue(temp, new TypeReference<Map<String, Object>>(){});
             }
 
             resultMap.put("RESPONSE_CODE", Integer.toString(responseCode));

@@ -1,15 +1,27 @@
 --- #Default
-server:
+server: #서버설정
   port: 9000 #서버포트
   tomcat: #톰캣설정
     accesslog:
       pattern: "%{yyyy-MM-dd HH:mm:ss}t\t%s\t%r\t%{User-Agent}i\t%{Referer}i\t%a\t%b"
       enabled: true
     basedir: .
-spring:
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration #DB안쓸경우 설정
-krx:
+spring: #스프링설정
+  #autoconfigure:
+    #exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration #DB안쓸경우 설정
+    datasource:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://midal.cxpwn53p8ynb.ap-northeast-2.rds.amazonaws.com:3306/mydb?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=utf8
+      username: jj
+      password: bizstudy
+mybatis: #MyBatis 설정
+  mapper-locations: classpath:mapper/**/*.xml
+  configuration:
+    lazy-loading-enabled: true
+    aggressive-lazy-loading: false
+    map-underscore-to-camel-case: true
+    auto-mapping-behavior: full
+krx: #거래소
   url: "http://asp1.krx.co.kr/servlet/krx.asp.XMLSise?code="
 ---
 spring:
