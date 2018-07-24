@@ -41,7 +41,7 @@ public class DataBatchManager {
         for(StockInfo stockInfo:listCode){
             DataGather dataGather = applicationContext.getBean(DataGather.class);
             dataGather.setStrCode(stockInfo.getStockCd());
-            executor.scheduleWithFixedDelay(dataGather, 1000, 5000, TimeUnit.MILLISECONDS);
+            executor.scheduleWithFixedDelay(dataGather, 1000, 10000, TimeUnit.MILLISECONDS);
         }
     }
 
