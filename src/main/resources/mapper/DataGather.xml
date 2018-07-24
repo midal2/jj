@@ -31,7 +31,15 @@
             #{Buyprice},
             #{Amount},
             now(),
-            now());
+            now())
+        ON DUPLICATE KEY UPDATE
+            `negoprice`= #{negoprice},
+            `Debi`= #{Debi},
+            `Dungrak`= #{Dungrak},
+            `Sellprice`= #{Sellprice},
+            `Buyprice`= #{Buyprice},
+            `Amount`= #{Amount},
+            `UpdateDt`= now();
     </insert>
 
     <update id="updateTBL_StockInfo" parameterType="hashmap">
@@ -61,8 +69,7 @@
 
     <insert id="insertTBL_DailyStock" parameterType="hashmap" useGeneratedKeys="true" keyProperty="idx">
         INSERT INTO `mydb`.`TBL_DailyStock`
-            (`idx`,
-            `StockCd`,
+            (`StockCd`,
             `day_Date`,
             `day_EndPrice`,
             `day_Debi`,
@@ -74,8 +81,7 @@
             `day_getAmount`,
             `CreateDt`,
             `UpdateDt`)
-        VALUES
-            (#{idx},
+        VALUES(
             #{StockCd},
             #{day_Date},
             #{day_EndPrice},
@@ -87,8 +93,17 @@
             #{day_Volume},
             #{day_getAmount},
             now(),
-            now());
-
+            now())
+        ON DUPLICATE KEY UPDATE
+            `day_EndPrice` = #{day_EndPrice},
+            `day_Debi`= #{day_Debi},
+            `day_Dungrak`= #{day_Dungrak},
+            `day_Start`= #{day_Start},
+            `day_High`= #{day_High},
+            `day_Low`= #{day_Low},
+            `day_Volume`= #{day_Volume},
+            `day_getAmount`= #{day_getAmount},
+            `UpdateDt`= now();
     </insert>
 
 </mapper>
