@@ -3,7 +3,7 @@ package jj.biztrip.batch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class BatchBase {
+public abstract class BatchBase implements Runnable{
     protected Logger logger;
 
     public BatchBase(){

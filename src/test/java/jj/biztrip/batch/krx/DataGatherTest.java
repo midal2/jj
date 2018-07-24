@@ -11,11 +11,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class DataGatherTest {
 
     @Autowired
-    private DataGather dataGather;
+    private DataBatchManager batch;
 
     @Test
     public void test_배치호출(){
-        dataGather.batch();
     }
 
 }

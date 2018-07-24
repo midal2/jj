@@ -12,7 +12,6 @@ public class ScheduleTest {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
-    @Scheduled(fixedDelay = 2000)
     public void testSchedule(){
         logger.debug("testSchedule : " + new Date());
     }

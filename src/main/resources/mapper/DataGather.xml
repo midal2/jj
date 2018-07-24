@@ -3,27 +3,92 @@
 
 <mapper namespace="jj.biztrip.batch.krx.DataGatherDAO">
 
-
-    <!-- TimeConclude을 추가한다 -->
-    <insert id="insertTimeConclude" parameterType="hashmap" useGeneratedKeys="true" keyProperty="idx">
-        INSERT INTO `mydb`.`time_conclude`
-            (`item_cd`,
+    <select id="selectStockCdList" resultType="jj.biztrip.batch.krx.model.StockInfo">
+        SELECT
+          StockCd
+        FROM
+          TBL_StockInfo;
+    </select>
+    <insert id="insertTBL_TimeConclude" parameterType="hashmap" useGeneratedKeys="true" keyProperty="idx">
+        INSERT INTO `mydb`.`TBL_TimeConclude`
+            (`StockCd`,
             `time`,
             `negoprice`,
-            `dungrak`,
-            `debi`,
-            `sellprice`,
-            `buyprice`,
-            `amount`)
-            VALUES
-            (#{item_cd},
+            `Debi`,
+            `Dungrak`,
+            `Sellprice`,
+            `Buyprice`,
+            `Amount`,
+            `CreateDt`,
+            `UpdateDt`)
+        VALUES
+            (#{StockCd},
             #{time},
             #{negoprice},
-            #{dungrak},
-            #{debi},
-            #{sellprice},
-            #{buyprice},
-            #{amount})
+            #{Debi},
+            #{Dungrak},
+            #{Sellprice},
+            #{Buyprice},
+            #{Amount},
+            now(),
+            now());
+    </insert>
+
+    <update id="updateTBL_StockInfo" parameterType="hashmap">
+        UPDATE `mydb`.`TBL_StockInfo`
+        SET
+            `JongName` = #{JongName},
+            `CurJuka` = #{CurJuka},
+            `Debi` = #{Debi},
+            `DungRak` = #{DungRak},
+            `PrevJuka` = #{PrevJuka},
+            `Volume` = #{Volume},
+            `Money` = #{Money},
+            `StartJuka` = #{StartJuka},
+            `HighJuka` = #{HighJuka},
+            `LowJuka` = #{LowJuka},
+            `High52` = #{High52},
+            `Low52` = #{Low52},
+            `UpJuka` = #{UpJuka},
+            `DownJuka` = #{DownJuka},
+            `Per` = #{Per},
+            `Amount` = #{Amount},
+            `FaceJuka` = #{FaceJuka},
+            `UpdateDt` = now()
+        WHERE `StockCd` = #{StockCd};
+
+    </update>
+
+    <insert id="insertTBL_DailyStock" parameterType="hashmap" useGeneratedKeys="true" keyProperty="idx">
+        INSERT INTO `mydb`.`TBL_DailyStock`
+            (`idx`,
+            `StockCd`,
+            `day_Date`,
+            `day_EndPrice`,
+            `day_Debi`,
+            `day_Dungrak`,
+            `day_Start`,
+            `day_High`,
+            `day_Low`,
+            `day_Volume`,
+            `day_getAmount`,
+            `CreateDt`,
+            `UpdateDt`)
+        VALUES
+            (#{idx},
+            #{StockCd},
+            #{day_Date},
+            #{day_EndPrice},
+            #{day_Debi},
+            #{day_Dungrak},
+            #{day_Start},
+            #{day_High},
+            #{day_Low},
+            #{day_Volume},
+            #{day_getAmount},
+            now(),
+            now());
+
     </insert>
 
 </mapper>
