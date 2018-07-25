@@ -2,6 +2,7 @@ package jj.biztrip.batch.krx;
 
 import jj.biztrip.batch.krx.model.StockInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
@@ -21,6 +22,9 @@ public class DataBatchManager {
     @Autowired
     private DataGatherDAO dataGatherDAO;
 
+    @Value("${krx.poolSize}")
+    private int iPoolSize;
+
     @EventListener
     public void onApplicationEvent(ApplicationEvent applicationEvent) {
         if (applicationEvent.getClass() == ApplicationReadyEvent.class){
@@ -37,7 +41,7 @@ public class DataBatchManager {
         List<StockInfo> listCode = getStockCodeList();
 
         Step("종목코드별로 스케쥴내역을 등록한다");
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(100);
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(iPoolSize);
         for(StockInfo stockInfo:listCode){
             DataGather dataGather = applicationContext.getBean(DataGather.class);
             dataGather.setStrCode(stockInfo.getStockCd());
