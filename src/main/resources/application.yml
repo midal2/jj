@@ -22,7 +22,7 @@ mybatis: #MyBatis 설정
     map-underscore-to-camel-case: true
     auto-mapping-behavior: full
 krx: #거래소
-  url: "http://asp1.krx.co.kr/servlet/krx.asp.XMLSiseEng?code="
+  url: "http://asp1.krx.co.kr/servlet/krx.asp.XMLSise?code="
   poolSize : 1 #쓰레드풀갯수
   groupSize : 3 #쓰레드당 처리할 종목코드수
 ---
