@@ -61,7 +61,7 @@ public class DataBatchManager {
             }
         }
 
-        if (dataGather == null){
+        if (dataGather != null){
             executor.scheduleWithFixedDelay(dataGather, 1000, 15000, TimeUnit.MILLISECONDS);
         }
 
