@@ -40,6 +40,6 @@ logging:
     jj.biztrip.batch.krx.DataGather: INFO
     jj.biztrip.batch.krx.DataBatchManager: INFO
 krx: #거래소
-  poolSize : 100 #쓰레드풀갯수
-  groupSize : 25 #쓰레드당 처리할 종목코드수
+  poolSize : 2 #쓰레드풀갯수
+  groupSize : 1000 #쓰레드당 처리할 종목코드수
 
