@@ -1,6 +1,8 @@
 package jj.biztrip.batch.krx;
 
 import jj.biztrip.batch.krx.model.StockInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -16,6 +18,9 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 public class DataBatchManager {
+
+    protected Logger logger;
+
     @Autowired
     private ApplicationContext applicationContext;
 
@@ -27,6 +32,11 @@ public class DataBatchManager {
 
     @Value("${krx.groupSize}")
     private int iGroupSize;
+
+    public DataBatchManager(){
+        super();
+        logger = LoggerFactory.getLogger(this.getClass().getName());
+    }
 
     @EventListener
     public void onApplicationEvent(ApplicationEvent applicationEvent) {
@@ -46,12 +56,14 @@ public class DataBatchManager {
         Step("종목코드별로 스케쥴내역을 등록한다");
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(iPoolSize);
         DataGather dataGather = null;
+        StringBuffer sbLoadStockCd = new StringBuffer();
         for(StockInfo stockInfo:listCode){
             if (dataGather == null){
                 dataGather = applicationContext.getBean(DataGather.class);
             }
 
             dataGather.addCode(stockInfo.getStockCd());
+            sbLoadStockCd.append(stockInfo.getStockCd()).append(":");
 
             if (dataGather.getCodeList().size() % iGroupSize == 0){
                 executor.scheduleWithFixedDelay(dataGather, 1000, 15000, TimeUnit.MILLISECONDS);
@@ -61,6 +73,7 @@ public class DataBatchManager {
             }
         }
 
+        logger.info("LOAD_STOCK_LIST[" + sbLoadStockCd.toString() + "]");
         if (dataGather != null){
             executor.scheduleWithFixedDelay(dataGather, 1000, 15000, TimeUnit.MILLISECONDS);
         }
@@ -78,6 +91,7 @@ public class DataBatchManager {
     }
 
     private void Step(String str){
+        logger.info("Step[" + str + "]");
 
     }
 }
