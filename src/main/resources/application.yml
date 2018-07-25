@@ -39,6 +39,6 @@ logging:
     jj.biztrip.batch.krx.DataGatherDAO: ERROR
     jj.biztrip.batch.krx.DataGather: INFO
 krx: #거래소
-  poolSize : 150 #쓰레드풀갯수
-  groupSize : 15 #쓰레드당 처리할 종목코드수
+  poolSize : 100 #쓰레드풀갯수
+  groupSize : 25 #쓰레드당 처리할 종목코드수
 
