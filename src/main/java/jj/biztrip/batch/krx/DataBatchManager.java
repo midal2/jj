@@ -37,7 +37,7 @@ public class DataBatchManager {
         List<StockInfo> listCode = getStockCodeList();
 
         Step("종목코드별로 스케쥴내역을 등록한다");
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(100);
         for(StockInfo stockInfo:listCode){
             DataGather dataGather = applicationContext.getBean(DataGather.class);
             dataGather.setStrCode(stockInfo.getStockCd());
