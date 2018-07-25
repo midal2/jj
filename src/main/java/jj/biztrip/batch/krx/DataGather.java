@@ -68,29 +68,33 @@ public class DataGather extends BatchBase{
             logger.error("증권코드가 없음");
             return;
         }
-        logger.info("THREAD_NO[" + threadNo +  "][" + i + "/" + codeList.size() + "]" + "종목코드[" + strCode + "] Start!");
+
 
         Step("증권코드 결과가져오기");
         Map<String, Object> resultMap =  bizService.send(strKrxUrl+strCode,"", BizServiceType.XML, "");
 
         Step("StockInfo(주가정보) 기록하기");
         StockInfo stockInfo = getStockInfo(resultMap, strCode);
-        int applyCnt = dataGatherDAO.updateTBL_StockInfo(stockInfo);
-        logger.debug("applyCnt:" + applyCnt);
+        int infoCnt = dataGatherDAO.updateTBL_StockInfo(stockInfo);
+        logger.debug("infoCnt:" + infoCnt);
 
         Step("TimeConclude(시간별 체결가) 기록하기");
         List<TimeConclude> mapTimeConclude = getTimeConclude(resultMap, strCode);
+        int timeCnt = 0;
         for(TimeConclude selectedItem : mapTimeConclude){
-            applyCnt = dataGatherDAO.insertTBL_TimeConclude(selectedItem);
-            logger.debug("applyCnt:" + applyCnt);
+            timeCnt = timeCnt + dataGatherDAO.insertTBL_TimeConclude(selectedItem);
         }
+        logger.debug("timeCnt:" + timeCnt);
 
         Step("DailyStock(일자별 체결가) 기록하기");
+        int dayCnt = 0;
         List<DailyStock> listDailyStock = getDailyStock(resultMap, strCode);
         for(DailyStock selectedItem : listDailyStock){
-            applyCnt = dataGatherDAO.insertTBL_DailyStock(selectedItem);
-            logger.debug("applyCnt:" + applyCnt);
+            dayCnt = dayCnt + dataGatherDAO.insertTBL_DailyStock(selectedItem);
         }
+        logger.debug("dayCnt:" + dayCnt);
+
+        logger.info("THREAD_NO[" + threadNo +  "][" + i + "/" + codeList.size() + "]" + "종목코드[" + strCode + "][" + infoCnt + "/" + timeCnt + "/" + dayCnt + "]Process");
     }
 
     /**
