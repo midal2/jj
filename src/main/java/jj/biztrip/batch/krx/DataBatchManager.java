@@ -65,6 +65,7 @@ public class DataBatchManager {
             executor.scheduleWithFixedDelay(dataGather, 1000, 15000, TimeUnit.MILLISECONDS);
         }
 
+
     }
 
     /**
