@@ -101,9 +101,9 @@ public class DataGather extends BatchBase{
         Object obj = resultMap.get("TBL_DailyStock");
         Map mapObj = (Map)obj;
         obj = mapObj.get("DailyStock");
-        List<Map> listObj = (List<Map>)obj;
 
-        for(Map selectedMap:listObj){
+        if (obj instanceof  Map){
+            Map selectedMap = (Map)obj;
             DailyStock dailyStock = new DailyStock();
 
             dailyStock.setStockCd(strCode);
@@ -118,6 +118,24 @@ public class DataGather extends BatchBase{
             dailyStock.setDay_getAmount(cLong(selectedMap.get("day_getAmount")));
 
             list.add(dailyStock);
+        }else {
+            List<Map> listObj = (List<Map>) obj;
+            for (Map selectedMap : listObj) {
+                DailyStock dailyStock = new DailyStock();
+
+                dailyStock.setStockCd(strCode);
+                dailyStock.setDay_Date(selectedMap.get("day_Date").toString());
+                dailyStock.setDay_EndPrice(cLong(selectedMap.get("day_EndPrice")));
+                dailyStock.setDay_Debi(cLong(selectedMap.get("day_Debi")));
+                dailyStock.setDay_Dungrak(selectedMap.get("day_Dungrak").toString());
+                dailyStock.setDay_Start(cLong(selectedMap.get("day_Start")));
+                dailyStock.setDay_High(cLong(selectedMap.get("day_High")));
+                dailyStock.setDay_Low(cLong(selectedMap.get("day_Low")));
+                dailyStock.setDay_Volume(cLong(selectedMap.get("day_Volume")));
+                dailyStock.setDay_getAmount(cLong(selectedMap.get("day_getAmount")));
+
+                list.add(dailyStock);
+            }
         }
 
         return list;
