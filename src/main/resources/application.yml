@@ -35,5 +35,5 @@ spring:
 logging:
   level:
     jj.biztrip.batch.krx.DataGatherDAO: ERROR
-
+    jj.biztrip.batch.krx.DataGather: INFO
 

@@ -42,6 +42,7 @@ public class DataGather extends BatchBase{
             logger.error("증권코드가 없음");
             return;
         }
+        logger.info("종목코드[" + strCode + "] Start!");
 
         Step("증권코드 결과가져오기");
         Map<String, Object> resultMap =  bizService.send(strKrxUrl+strCode,"", BizServiceType.XML, "");
