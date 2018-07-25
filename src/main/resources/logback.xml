@@ -24,7 +24,11 @@
     </appender>
 
     <appender name="ROLLING_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
-
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>error</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
         <file>${LOGS_ABSOLUTE_PATH}/logback_err.log</file>
         <encoder>
             <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %-5level %logger{35} - %msg%n</pattern>
