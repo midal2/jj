@@ -30,6 +30,8 @@ public class DataGather extends BatchBase{
     @Value("${krx.url}")
     private String strKrxUrl;
 
+    private String strStepMsg;
+
     private List<String> codeList; //종목코드
 
     @Autowired
@@ -51,7 +53,7 @@ public class DataGather extends BatchBase{
             try {
                 processStockInfo(strCode);
             }catch (Exception e){
-                logger.error("처리중오류 발생[" + strCode + "][" + e.getMessage() + ")");
+                logger.error("처리중오류 발생[" + strCode + "][" + strStepMsg + "][" + e.getMessage() + "]");
             }
         }
     }
@@ -194,6 +196,7 @@ public class DataGather extends BatchBase{
      * @param str
      */
     public void Step(String str){
+        strStepMsg = str;
         logger.debug("STEP[" + str + "]");
     }
 
