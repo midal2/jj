@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -64,7 +63,7 @@ public class DataGather extends BatchBase{
             logger.error("증권코드가 없음");
             return;
         }
-        logger.info("종목코드[" + strCode + "][" + Runtime.getRuntime().availableProcessors() + "] Start!");
+        logger.info("종목코드[" + strCode + "][" + codeList.size() + "] Start!");
 
         Step("증권코드 결과가져오기");
         Map<String, Object> resultMap =  bizService.send(strKrxUrl+strCode,"", BizServiceType.XML, "");
