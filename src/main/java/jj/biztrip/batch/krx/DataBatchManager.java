@@ -56,14 +56,15 @@ public class DataBatchManager {
         Step("종목코드별로 스케쥴내역을 등록한다");
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(iPoolSize);
         DataGather dataGather = null;
-        StringBuffer sbLoadStockCd = new StringBuffer();
+        int iDataGather = 0;
         for(StockInfo stockInfo:listCode){
             if (dataGather == null){
                 dataGather = applicationContext.getBean(DataGather.class);
+                ++iDataGather;
+                dataGather.setThreadNo(Integer.toString(iDataGather));
             }
 
             dataGather.addCode(stockInfo.getStockCd());
-            sbLoadStockCd.append(stockInfo.getStockCd()).append(":");
 
             if (dataGather.getCodeList().size() % iGroupSize == 0){
                 executor.scheduleWithFixedDelay(dataGather, 1000, 15000, TimeUnit.MILLISECONDS);
@@ -73,7 +74,6 @@ public class DataBatchManager {
             }
         }
 
-        logger.info("LOAD_STOCK_LIST[" + sbLoadStockCd.toString() + "]");
         if (dataGather != null){
             executor.scheduleWithFixedDelay(dataGather, 1000, 15000, TimeUnit.MILLISECONDS);
         }

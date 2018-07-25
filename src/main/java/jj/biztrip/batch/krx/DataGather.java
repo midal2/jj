@@ -30,6 +30,8 @@ public class DataGather extends BatchBase{
     @Value("${krx.url}")
     private String strKrxUrl;
 
+    private String threadNo;
+
     private String strStepMsg;
 
     private List<String> codeList; //종목코드
@@ -49,21 +51,24 @@ public class DataGather extends BatchBase{
     @Override
     @Transactional
     public void run() {
+
+        int i=0;
         for(String strCode:codeList){
+            ++i;
             try {
-                processStockInfo(strCode);
+                processStockInfo(i, strCode);
             }catch (Exception e){
                 logger.error("처리중오류 발생[" + strCode + "][" + strStepMsg + "][" + e.getMessage() + "]");
             }
         }
     }
 
-    private void processStockInfo(String strCode) {
+    private void processStockInfo(int i, String strCode) {
         if (strCode == null || "".equals(strCode)){
             logger.error("증권코드가 없음");
             return;
         }
-        logger.info("종목코드[" + strCode + "][" + codeList.size() + "] Start!");
+        logger.info("THREAD_NO[" + threadNo +  "][" + i + "/" + codeList.size() + "]" + "종목코드[" + strCode + "] Start!");
 
         Step("증권코드 결과가져오기");
         Map<String, Object> resultMap =  bizService.send(strKrxUrl+strCode,"", BizServiceType.XML, "");
