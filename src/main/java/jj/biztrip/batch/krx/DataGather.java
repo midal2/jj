@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -131,7 +132,6 @@ public class DataGather extends BatchBase{
      */
     private StockInfo getStockInfo(Map<String,Object> resultMap, String strCode) {
         StockInfo stockInfo = new StockInfo();
-        List<Map<String,Object>> list = new LinkedList<>();
 
         Object obj = resultMap.get("TBL_StockInfo");
         Map mapObj = (Map)obj;
@@ -170,9 +170,8 @@ public class DataGather extends BatchBase{
         Object obj = resultMap.get("TBL_TimeConclude");
         Map mapObj = (Map)obj;
         obj = mapObj.get("TBL_TimeConclude");
-        List<Map> listObj = (List<Map>)obj;
-
-        for(Map selectedMap:listObj){
+        if (obj instanceof  Map){
+            Map selectedMap = (Map)obj;
             TimeConclude timeConclude = new TimeConclude();
 
             timeConclude.setStockCd(strCode);
@@ -185,6 +184,22 @@ public class DataGather extends BatchBase{
             timeConclude.setAmount(cLong(selectedMap.get("Amount")));
 
             list.add(timeConclude);
+        }else {
+            List<Map> listObj = (List<Map>) obj;
+            for (Map selectedMap : listObj) {
+                TimeConclude timeConclude = new TimeConclude();
+
+                timeConclude.setStockCd(strCode);
+                timeConclude.setTime(selectedMap.get("time").toString());
+                timeConclude.setNegoprice(cLong(selectedMap.get("negoprice").toString()));
+                timeConclude.setDebi(cLong(selectedMap.get("Debi")));
+                timeConclude.setDungrak(selectedMap.get("Dungrak").toString());
+                timeConclude.setSellprice(cLong(selectedMap.get("Sellprice")));
+                timeConclude.setBuyprice(cLong(selectedMap.get("Buyprice")));
+                timeConclude.setAmount(cLong(selectedMap.get("Amount")));
+
+                list.add(timeConclude);
+            }
         }
 
         return list;
