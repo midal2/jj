@@ -23,7 +23,8 @@ mybatis: #MyBatis 설정
     auto-mapping-behavior: full
 krx: #거래소
   url: "http://asp1.krx.co.kr/servlet/krx.asp.XMLSiseEng?code="
-  poolSize : 1
+  poolSize : 1 #쓰레드풀갯수
+  groupSize : 3 #쓰레드당 처리할 종목코드수
 ---
 spring:
   profiles: local
@@ -38,5 +39,6 @@ logging:
     jj.biztrip.batch.krx.DataGatherDAO: ERROR
     jj.biztrip.batch.krx.DataGather: INFO
 krx: #거래소
-  poolSize : 500
+  poolSize : 150 #쓰레드풀갯수
+  groupSize : 5 #쓰레드당 처리할 종목코드수
 

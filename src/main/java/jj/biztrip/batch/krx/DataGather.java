@@ -30,14 +30,33 @@ public class DataGather extends BatchBase{
     @Value("${krx.url}")
     private String strKrxUrl;
 
-    private String strCode; //종목코드
+    private List<String> codeList; //종목코드
 
     @Autowired
     private DataGatherDAO dataGatherDAO;
 
+    public DataGather(){
+        super();
+        codeList = new LinkedList<>();
+    }
+
+    public void addCode(String strCode){
+        codeList.add(strCode);
+    }
+
     @Override
     @Transactional
     public void run() {
+        for(String strCode:codeList){
+            try {
+                processStockInfo(strCode);
+            }catch (Exception e){
+                logger.error("처리중오류 발생[" + strCode + "][" + e.getMessage() + ")");
+            }
+        }
+    }
+
+    private void processStockInfo(String strCode) {
         if (strCode == null || "".equals(strCode)){
             logger.error("증권코드가 없음");
             return;

@@ -25,6 +25,9 @@ public class DataBatchManager {
     @Value("${krx.poolSize}")
     private int iPoolSize;
 
+    @Value("${krx.groupSize}")
+    private int iGroupSize;
+
     @EventListener
     public void onApplicationEvent(ApplicationEvent applicationEvent) {
         if (applicationEvent.getClass() == ApplicationReadyEvent.class){
@@ -42,11 +45,26 @@ public class DataBatchManager {
 
         Step("종목코드별로 스케쥴내역을 등록한다");
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(iPoolSize);
+        DataGather dataGather = null;
         for(StockInfo stockInfo:listCode){
-            DataGather dataGather = applicationContext.getBean(DataGather.class);
-            dataGather.setStrCode(stockInfo.getStockCd());
+            if (dataGather == null){
+                dataGather = applicationContext.getBean(DataGather.class);
+            }
+
+            dataGather.addCode(stockInfo.getStockCd());
+
+            if (dataGather.getCodeList().size() % iGroupSize == 0){
+                executor.scheduleWithFixedDelay(dataGather, 1000, 15000, TimeUnit.MILLISECONDS);
+                dataGather = null;
+            }else{
+                continue;
+            }
+        }
+
+        if (dataGather == null){
             executor.scheduleWithFixedDelay(dataGather, 1000, 15000, TimeUnit.MILLISECONDS);
         }
+
     }
 
     /**
