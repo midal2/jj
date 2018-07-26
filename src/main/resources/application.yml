@@ -19,11 +19,12 @@ spring: #스프링설정
       #maxWait: 10000
       hikari:
         connection-test-query: SELECT 1 FROM DUAL
-        idle-timeout: 300000
-        minimum-idle: 3000
+        idle-timeout: 200000
+        minimum-idle: 0
         maximum-pool-size: 3000
         pool-name: yourPoolName
         auto-commit: false
+      type: com.zaxxer.hikari.HikariDataSource
 mybatis: #MyBatis 설정
   mapper-locations: classpath:mapper/**/*.xml
   configuration:
