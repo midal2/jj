@@ -29,9 +29,9 @@
             #{negoprice},
             #{Debi},
             #{Dungrak},
-            #{Sellprice},
-            #{Buyprice},
-            #{Amount},
+            #{sellprice},
+            #{buyprice},
+            #{amount},
             now(),
             now())
         ON DUPLICATE KEY UPDATE

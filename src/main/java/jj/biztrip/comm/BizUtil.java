@@ -24,7 +24,7 @@ public class BizUtil {
         try {
             result = Long.parseLong(readStr);
         }catch (Exception e){
-            logger.error("cLong error:" + e.getMessage());
+            logger.warn("cLong error:" + e.getMessage());
         }
 
         return result;

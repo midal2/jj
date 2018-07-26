@@ -19,7 +19,7 @@ spring: #스프링설정
       #maxWait: 10000
       hikari:
         connection-test-query: SELECT 1 FROM DUAL
-        connection-timeout: 200000
+        #connection-timeout: 300000
         idle-timeout: 200000
         minimum-idle: 0
         maximum-pool-size: 3000
@@ -46,8 +46,8 @@ logging:
     jj.biztrip.batch.krx.DataGather: INFO
     jj.biztrip.batch.krx.DataBatchManager: INFO
 krx: #거래소
-  poolSize : 1000 #쓰레드풀갯수
-  groupSize : 2 #쓰레드당 처리할 종목코드수
+  poolSize : 500 #쓰레드풀갯수
+  groupSize : 5 #쓰레드당 처리할 종목코드수
 ---
 spring:
   profiles: dev

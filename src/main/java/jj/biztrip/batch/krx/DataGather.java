@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,6 +25,7 @@ import static jj.biztrip.comm.BizUtil.cLong;
 @Component
 @Scope("prototype")
 @Data
+@Transactional
 public class DataGather extends BatchBase implements IDataGather {
 
     @Autowired
@@ -64,6 +66,7 @@ public class DataGather extends BatchBase implements IDataGather {
         }
     }
 
+    @Transactional
     @Override
     public void processStockInfo(int i, String strCode) {
         if (strCode == null || "".equals(strCode)){
@@ -217,9 +220,9 @@ public class DataGather extends BatchBase implements IDataGather {
             timeConclude.setNegoprice(cLong(selectedMap.get("negoprice").toString()));
             timeConclude.setDebi(cLong(selectedMap.get("Debi")));
             timeConclude.setDungrak(selectedMap.get("Dungrak").toString());
-            timeConclude.setSellprice(cLong(selectedMap.get("Sellprice")));
-            timeConclude.setBuyprice(cLong(selectedMap.get("Buyprice")));
-            timeConclude.setAmount(cLong(selectedMap.get("Amount")));
+            timeConclude.setSellprice(cLong(selectedMap.get("sellprice")));
+            timeConclude.setBuyprice(cLong(selectedMap.get("buyprice")));
+            timeConclude.setAmount(cLong(selectedMap.get("amount")));
 
             list.add(timeConclude);
         }else {
@@ -233,9 +236,9 @@ public class DataGather extends BatchBase implements IDataGather {
                 timeConclude.setNegoprice(cLong(selectedMap.get("negoprice").toString()));
                 timeConclude.setDebi(cLong(selectedMap.get("Debi")));
                 timeConclude.setDungrak(selectedMap.get("Dungrak").toString());
-                timeConclude.setSellprice(cLong(selectedMap.get("Sellprice")));
-                timeConclude.setBuyprice(cLong(selectedMap.get("Buyprice")));
-                timeConclude.setAmount(cLong(selectedMap.get("Amount")));
+                timeConclude.setSellprice(cLong(selectedMap.get("sellprice")));
+                timeConclude.setBuyprice(cLong(selectedMap.get("buyprice")));
+                timeConclude.setAmount(cLong(selectedMap.get("amount")));
 
                 list.add(timeConclude);
             }
