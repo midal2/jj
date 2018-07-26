@@ -12,6 +12,7 @@
     <insert id="insertTBL_TimeConclude" parameterType="hashmap" useGeneratedKeys="true" keyProperty="idx">
         INSERT INTO `mydb`.`TBL_TimeConclude`
             (`StockCd`,
+            `StockDt`,
             `time`,
             `negoprice`,
             `Debi`,
@@ -23,6 +24,7 @@
             `UpdateDt`)
         VALUES
             (#{StockCd},
+            #{StockDt},
             #{time},
             #{negoprice},
             #{Debi},

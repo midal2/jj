@@ -199,6 +199,9 @@ public class DataGather extends BatchBase{
     private List<TimeConclude> getTimeConclude(Map<String, Object> resultMap, String strCode) {
         List<TimeConclude> list = new LinkedList<>();
 
+        SimpleDateFormat sd = new SimpleDateFormat("yyyyMMdd");
+        String nowDt = sd.format(new Date());
+
         Object obj = resultMap.get("TBL_TimeConclude");
         Map mapObj = (Map)obj;
         obj = mapObj.get("TBL_TimeConclude");
@@ -207,6 +210,7 @@ public class DataGather extends BatchBase{
             TimeConclude timeConclude = new TimeConclude();
 
             timeConclude.setStockCd(strCode);
+            timeConclude.setStockDt(nowDt);
             timeConclude.setTime(selectedMap.get("time").toString());
             timeConclude.setNegoprice(cLong(selectedMap.get("negoprice").toString()));
             timeConclude.setDebi(cLong(selectedMap.get("Debi")));

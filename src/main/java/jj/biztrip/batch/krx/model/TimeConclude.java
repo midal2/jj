@@ -7,6 +7,7 @@ import java.util.Date;
 @Data
 public class TimeConclude {
    private int idx;
+   private String StockDt;
    private String StockCd;
    private String time;
    private long negoprice;
