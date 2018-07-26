@@ -226,6 +226,7 @@ public class DataGather extends BatchBase{
                 TimeConclude timeConclude = new TimeConclude();
 
                 timeConclude.setStockCd(strCode);
+                timeConclude.setStockDt(nowDt);
                 timeConclude.setTime(selectedMap.get("time").toString());
                 timeConclude.setNegoprice(cLong(selectedMap.get("negoprice").toString()));
                 timeConclude.setDebi(cLong(selectedMap.get("Debi")));
