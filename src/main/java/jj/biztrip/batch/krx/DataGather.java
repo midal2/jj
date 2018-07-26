@@ -2,6 +2,7 @@ package jj.biztrip.batch.krx;
 
 import jj.biztrip.batch.BatchBase;
 import jj.biztrip.batch.krx.model.DailyStock;
+import jj.biztrip.batch.krx.model.IDataGather;
 import jj.biztrip.batch.krx.model.StockInfo;
 import jj.biztrip.batch.krx.model.TimeConclude;
 import jj.biztrip.comm.BizService;
@@ -23,7 +24,7 @@ import static jj.biztrip.comm.BizUtil.cLong;
 @Component
 @Scope("prototype")
 @Data
-public class DataGather extends BatchBase{
+public class DataGather extends BatchBase implements IDataGather {
 
     @Autowired
     private BizService<Map<String, Object>> bizService;
@@ -49,7 +50,7 @@ public class DataGather extends BatchBase{
         codeList.add(strCode);
     }
 
-    @Override
+
     public void run() {
 
         int i=0;
@@ -63,7 +64,8 @@ public class DataGather extends BatchBase{
         }
     }
 
-    private void processStockInfo(int i, String strCode) {
+    @Override
+    public void processStockInfo(int i, String strCode) {
         if (strCode == null || "".equals(strCode)){
             logger.error("증권코드가 없음");
             return;
