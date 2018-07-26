@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -54,7 +55,7 @@ public class DataBatchManager {
         List<StockInfo> listCode = getStockCodeList();
 
         Step("종목코드별로 스케쥴내역을 등록한다");
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(iPoolSize);
+        ScheduledThreadPoolExecutor executor = (ScheduledThreadPoolExecutor)Executors.newScheduledThreadPool(iPoolSize);
         DataGather dataGather = null;
         int iDataGather = 0;
         for(StockInfo stockInfo:listCode){

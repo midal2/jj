@@ -54,15 +54,18 @@ public class DataGather extends BatchBase implements IDataGather {
 
 
     public void run() {
-
-        int i=0;
-        for(String strCode:codeList){
-            ++i;
-            try {
-                processStockInfo(i, strCode);
-            }catch (Exception e){
-                logger.error("처리중오류 발생[" + strCode + "][" + strStepMsg + "][" + e.getMessage() + "]");
+        try {
+            int i = 0;
+            for (String strCode : codeList) {
+                ++i;
+                try {
+                    processStockInfo(i, strCode);
+                } catch (Exception e) {
+                    logger.error("처리중오류 발생[" + strCode + "][" + strStepMsg + "][" + e.getMessage() + "]");
+                }
             }
+        }catch (Throwable e) {
+            logger.error("threadNo[" + threadNo + "] 중 오류발생[" + e.getMessage() + "]");
         }
     }
 
