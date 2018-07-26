@@ -19,8 +19,9 @@ spring: #스프링설정
       #maxWait: 10000
       hikari:
         connection-test-query: SELECT 1 FROM DUAL
-        minimum-idle: 1000
-        maximum-pool-size: 1000
+        idle-timeout: 300000
+        minimum-idle: 3000
+        maximum-pool-size: 3000
         pool-name: yourPoolName
         auto-commit: false
 mybatis: #MyBatis 설정
