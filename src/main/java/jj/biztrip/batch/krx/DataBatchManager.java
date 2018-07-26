@@ -12,10 +12,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 @Component
 public class DataBatchManager {
@@ -56,6 +53,13 @@ public class DataBatchManager {
 
         Step("종목코드별로 스케쥴내역을 등록한다");
         ScheduledThreadPoolExecutor executor = (ScheduledThreadPoolExecutor)Executors.newScheduledThreadPool(iPoolSize);
+        executor.setRejectedExecutionHandler(new RejectedExecutionHandler(){
+            @Override
+            public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+                DataGather dataGather = (DataGather)r;
+                logger.error("rejectedExecution Occured!!![" + dataGather.getThreadNo() + "/" + dataGather.getCodeList() + "]");
+            }
+        });
         DataGather dataGather = null;
         int iDataGather = 0;
         for(StockInfo stockInfo:listCode){
