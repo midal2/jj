@@ -15,7 +15,7 @@ spring: #스프링설정
       username: jj
       password: bizstudy
       #maxIdle: 20
-      #maxActive: 400
+      max-active: 1000
       #maxWait: 10000
 mybatis: #MyBatis 설정
   mapper-locations: classpath:mapper/**/*.xml
