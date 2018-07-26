@@ -46,9 +46,6 @@ spring:
 spring:
   profiles: real
   datasource:
-    maxIdle: 1000
-    maxActive: 1500
-    maxWait: 10000
 logging:
   level:
     jj.biztrip.batch.krx.DataGatherDAO: ERROR
