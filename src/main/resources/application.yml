@@ -15,10 +15,11 @@ spring: #스프링설정
       username: jj
       password: bizstudy
       #maxIdle: 20
-      max-active: 1000
+      #max-active: 1000
       #maxWait: 10000
       hikari:
         connection-test-query: SELECT 1 FROM DUAL
+        connection-timeout: 200000
         idle-timeout: 200000
         minimum-idle: 0
         maximum-pool-size: 3000
