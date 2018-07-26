@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -67,14 +69,16 @@ public class DataGather extends BatchBase{
             return;
         }
 
+        SimpleDateFormat sd = new SimpleDateFormat("HH:mm:ss");
 
         Step("증권코드 결과가져오기");
         Map<String, Object> resultMap =  bizService.send(strKrxUrl+strCode,"", BizServiceType.XML, "");
 
         Step("StockInfo(주가정보) 기록하기");
         StockInfo stockInfo = getStockInfo(resultMap, strCode);
-        int infoCnt = dataGatherDAO.updateTBL_StockInfo(stockInfo);
-        logger.debug("infoCnt:" + infoCnt);
+        int infoCnt = 0;
+        infoCnt = dataGatherDAO.updateTBL_StockInfo(stockInfo);
+        Date dtInfo = new Date();
 
         Step("TimeConclude(시간별 체결가) 기록하기");
         List<TimeConclude> mapTimeConclude = getTimeConclude(resultMap, strCode);
@@ -82,7 +86,7 @@ public class DataGather extends BatchBase{
         for(TimeConclude selectedItem : mapTimeConclude){
             timeCnt = timeCnt + dataGatherDAO.insertTBL_TimeConclude(selectedItem);
         }
-        logger.debug("timeCnt:" + timeCnt);
+        Date dtTime = new Date();
 
         Step("DailyStock(일자별 체결가) 기록하기");
         int dayCnt = 0;
@@ -90,9 +94,13 @@ public class DataGather extends BatchBase{
         for(DailyStock selectedItem : listDailyStock){
             dayCnt = dayCnt + dataGatherDAO.insertTBL_DailyStock(selectedItem);
         }
-        logger.debug("dayCnt:" + dayCnt);
+        Date dtDay = new Date();
 
-        logger.info("THREAD_NO[" + threadNo +  "][" + i + "/" + codeList.size() + "]" + "종목코드[" + strCode + "][" + infoCnt + "/" + timeCnt + "/" + dayCnt + "]Process");
+        logger.info("THREAD_NO[" + threadNo +  "][" + i + "/" + codeList.size() + "]" + "종목코드[" + strCode + "]["
+                + infoCnt + "-" + sd.format(dtInfo) + "/"
+                + timeCnt + "-" + sd.format(dtTime) + "/"
+                + dayCnt + "-" + sd.format(dtDay)
+                + "]Process");
     }
 
     /**

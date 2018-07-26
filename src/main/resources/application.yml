@@ -14,6 +14,9 @@ spring: #스프링설정
       url: jdbc:mysql://midal.cxpwn53p8ynb.ap-northeast-2.rds.amazonaws.com:3306/mydb?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=utf8
       username: jj
       password: bizstudy
+      #maxIdle: 20
+      #maxActive: 400
+      #maxWait: 10000
 mybatis: #MyBatis 설정
   mapper-locations: classpath:mapper/**/*.xml
   configuration:
@@ -28,6 +31,14 @@ krx: #거래소
 ---
 spring:
   profiles: local
+logging:
+  level:
+    jj.biztrip.batch.krx.DataGatherDAO: ERROR
+    jj.biztrip.batch.krx.DataGather: INFO
+    jj.biztrip.batch.krx.DataBatchManager: INFO
+krx: #거래소
+  poolSize : 1000 #쓰레드풀갯수
+  groupSize : 2 #쓰레드당 처리할 종목코드수
 ---
 spring:
   profiles: dev
@@ -40,6 +51,6 @@ logging:
     jj.biztrip.batch.krx.DataGather: INFO
     jj.biztrip.batch.krx.DataBatchManager: INFO
 krx: #거래소
-  poolSize : 2 #쓰레드풀갯수
-  groupSize : 1000 #쓰레드당 처리할 종목코드수
+  poolSize : 1000 #쓰레드풀갯수
+  groupSize : 2 #쓰레드당 처리할 종목코드수
 
