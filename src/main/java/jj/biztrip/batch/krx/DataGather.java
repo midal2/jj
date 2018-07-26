@@ -54,6 +54,7 @@ public class DataGather extends BatchBase implements IDataGather {
 
 
     public void run() {
+        logger.info("threadNo[" + threadNo + "] Started*****");
         try {
             int i = 0;
             for (String strCode : codeList) {
@@ -67,6 +68,7 @@ public class DataGather extends BatchBase implements IDataGather {
         }catch (Throwable e) {
             logger.error("threadNo[" + threadNo + "] 중 오류발생[" + e.getMessage() + "]");
         }
+        logger.info("threadNo[" + threadNo + "] End#####");
     }
 
     @Transactional
