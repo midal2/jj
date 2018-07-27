@@ -25,6 +25,7 @@ import static jj.biztrip.comm.BizUtil.cLong;
 @Component
 @Scope("prototype")
 @Data
+@Transactional
 public class DataGather extends BatchBase implements IDataGather {
 
     @Autowired
