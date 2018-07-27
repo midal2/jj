@@ -62,7 +62,7 @@ logging:
     jj.biztrip.batch.krx.DataGather: INFO
     jj.biztrip.batch.krx.DataBatchManager: INFO
 krx: #거래소
-  poolSize : 150 #쓰레드풀갯수
+  poolSize : 200 #쓰레드풀갯수
   groupSize : 1 #쓰레드당 처리할 종목코드수
-  batchInterval : 30000 # 배치 Interval(밀리세컨드)
+  batchInterval : 15000 # 배치 Interval(밀리세컨드)
 
