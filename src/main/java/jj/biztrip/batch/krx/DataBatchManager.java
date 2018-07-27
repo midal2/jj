@@ -31,6 +31,9 @@ public class DataBatchManager {
     @Value("${krx.groupSize}")
     private int iGroupSize;
 
+    @Value("${krx.batchInterval}")
+    private int iBatchInterval;
+
     public DataBatchManager(){
         super();
         logger = LoggerFactory.getLogger(this.getClass().getName());
@@ -81,7 +84,7 @@ public class DataBatchManager {
             dataGather.addCode(stockInfo.getStockCd());
 
             if (dataGather.getCodeList().size() % iGroupSize == 0){
-                executor.scheduleWithFixedDelay(dataGather, 1000, 10000, TimeUnit.MILLISECONDS);
+                executor.scheduleWithFixedDelay(dataGather, 1000, iBatchInterval, TimeUnit.MILLISECONDS);
                 dataGather = null;
             }else{
                 continue;
@@ -89,7 +92,7 @@ public class DataBatchManager {
         }
 
         if (dataGather != null){
-            executor.scheduleWithFixedDelay(dataGather, 1000, 10000, TimeUnit.MILLISECONDS);
+            executor.scheduleWithFixedDelay(dataGather, 1000, iBatchInterval, TimeUnit.MILLISECONDS);
         }
 
         logger.info("[TOTAL_DATA_GATHER_CNT][" + iDataGather + "]");
