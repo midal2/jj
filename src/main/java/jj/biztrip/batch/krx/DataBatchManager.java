@@ -48,11 +48,15 @@ public class DataBatchManager {
     }
 
     private void startup() {
-        Step("주식정보대상 종목코드를 가져온다");
+        ScheduledThreadPoolExecutor executor = (ScheduledThreadPoolExecutor)Executors.newScheduledThreadPool(iPoolSize);
+        Step("주식정보대상 종목코드를 가져온다. " +
+                "PoolSize[" + executor.getPoolSize() + "]/ " +
+                "CorePoolSize[" + executor.getCorePoolSize() + "/" +
+                "MaximumPoolSize[" + executor.getMaximumPoolSize() + "/" +
+                "]");
         List<StockInfo> listCode = getStockCodeList();
 
         Step("종목코드별로 스케쥴내역을 등록한다");
-        ScheduledThreadPoolExecutor executor = (ScheduledThreadPoolExecutor)Executors.newScheduledThreadPool(iPoolSize);
         executor.setRejectedExecutionHandler(new RejectedExecutionHandler(){
             @Override
             public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
@@ -60,6 +64,11 @@ public class DataBatchManager {
                 logger.error("rejectedExecution Occured!!![" + dataGather.getThreadNo() + "/" + dataGather.getCodeList() + "]");
             }
         });
+
+        MonitorThread monitor = new MonitorThread(executor, 3);
+        Thread monitorThread = new Thread(monitor);
+        monitorThread.start();
+
         DataGather dataGather = null;
         int iDataGather = 0;
         for(StockInfo stockInfo:listCode){
@@ -72,7 +81,7 @@ public class DataBatchManager {
             dataGather.addCode(stockInfo.getStockCd());
 
             if (dataGather.getCodeList().size() % iGroupSize == 0){
-                executor.scheduleWithFixedDelay(dataGather, 1000, 15000, TimeUnit.MILLISECONDS);
+                executor.scheduleWithFixedDelay(dataGather, 1000, 20000, TimeUnit.MILLISECONDS);
                 dataGather = null;
             }else{
                 continue;
@@ -80,7 +89,7 @@ public class DataBatchManager {
         }
 
         if (dataGather != null){
-            executor.scheduleWithFixedDelay(dataGather, 1000, 15000, TimeUnit.MILLISECONDS);
+            executor.scheduleWithFixedDelay(dataGather, 1000, 20000, TimeUnit.MILLISECONDS);
         }
 
         logger.info("[TOTAL_DATA_GATHER_CNT][" + iDataGather + "]");
@@ -101,4 +110,43 @@ public class DataBatchManager {
         logger.info("Step[" + str + "]");
 
     }
+}
+
+class MonitorThread implements Runnable{
+    private ThreadPoolExecutor executor;
+    private int seconds;
+    private Boolean run = true;
+    public MonitorThread(ThreadPoolExecutor executor, int seconds) {
+        super();
+        this.executor = executor;
+        this.seconds = seconds;
+    }
+
+    public void shutDown() {
+        this.run = false;
+    }
+
+    @Override
+    public void run() {
+        Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+        while (run) {
+            logger.info(
+                    String.format("[##MONITOR##] [%d/%d] Active: %d, Completed: %d, Task: %d, QueueSize : %d, isShutdown: %s, isTerminated: %s",
+                            this.executor.getPoolSize(),
+                            this.executor.getCorePoolSize(),
+                            this.executor.getActiveCount(),
+                            this.executor.getCompletedTaskCount(),
+                            this.executor.getTaskCount(),
+                            this.executor.getQueue().size(),
+                            this.executor.isShutdown(),
+                            this.executor.isTerminated()));
+            try {
+                Thread.sleep(seconds*1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
 }

@@ -25,7 +25,6 @@ import static jj.biztrip.comm.BizUtil.cLong;
 @Component
 @Scope("prototype")
 @Data
-@Transactional
 public class DataGather extends BatchBase implements IDataGather {
 
     @Autowired
@@ -40,12 +39,15 @@ public class DataGather extends BatchBase implements IDataGather {
 
     private List<String> codeList; //종목코드
 
+    private SimpleDateFormat sd;
+
     @Autowired
     private DataGatherDAO dataGatherDAO;
 
     public DataGather(){
         super();
         codeList = new LinkedList<>();
+        sd = new SimpleDateFormat("HH:mm:ss");
     }
 
     public void addCode(String strCode){
@@ -54,7 +56,8 @@ public class DataGather extends BatchBase implements IDataGather {
 
 
     public void run() {
-        logger.info("threadNo[" + threadNo + "] Started*****");
+        Date startDt = new Date();
+
         try {
             int i = 0;
             for (String strCode : codeList) {
@@ -66,12 +69,21 @@ public class DataGather extends BatchBase implements IDataGather {
                 }
             }
         }catch (Throwable e) {
-            logger.error("threadNo[" + threadNo + "] 중 오류발생[" + e.getMessage() + "]");
+            logger.error("[THREAD_NO][" + threadNo + "] 중 오류발생[" + e.getMessage() + "]");
         }
-        logger.info("threadNo[" + threadNo + "] End#####");
+
+        Date endDt = new Date();
+
+        logger.info(
+                String.format("[THREAD_NO][%s] stTime: %s, edTime: %s, runTime %d second",
+                        threadNo,
+                        sd.format(startDt),
+                        sd.format(endDt),
+                        ((endDt.getTime() - startDt.getTime()) / 1000)
+                )
+        );
     }
 
-    @Transactional
     @Override
     public void processStockInfo(int i, String strCode) {
         if (strCode == null || "".equals(strCode)){
@@ -86,9 +98,8 @@ public class DataGather extends BatchBase implements IDataGather {
 
         Step("StockInfo(주가정보) 기록하기");
         StockInfo stockInfo = getStockInfo(resultMap, strCode);
-        int infoCnt = 0;
+        int infoCnt;
         infoCnt = dataGatherDAO.updateTBL_StockInfo(stockInfo);
-        Date dtInfo = new Date();
 
         Step("TimeConclude(시간별 체결가) 기록하기");
         List<TimeConclude> mapTimeConclude = getTimeConclude(resultMap, strCode);
@@ -96,7 +107,6 @@ public class DataGather extends BatchBase implements IDataGather {
         for(TimeConclude selectedItem : mapTimeConclude){
             timeCnt = timeCnt + dataGatherDAO.insertTBL_TimeConclude(selectedItem);
         }
-        Date dtTime = new Date();
 
         Step("DailyStock(일자별 체결가) 기록하기");
         int dayCnt = 0;
@@ -104,13 +114,14 @@ public class DataGather extends BatchBase implements IDataGather {
         for(DailyStock selectedItem : listDailyStock){
             dayCnt = dayCnt + dataGatherDAO.insertTBL_DailyStock(selectedItem);
         }
-        Date dtDay = new Date();
 
-        logger.info("THREAD_NO[" + threadNo +  "][" + i + "/" + codeList.size() + "]" + "종목코드[" + strCode + "]["
-                + infoCnt + "-" + sd.format(dtInfo) + "/"
-                + timeCnt + "-" + sd.format(dtTime) + "/"
-                + dayCnt + "-" + sd.format(dtDay)
-                + "]Process");
+        logger.info(
+                String.format("    [STOCK_INFO] %s - %s[%d], InfoDbCnt: %d, TimeConcludeDbCnt: %d, DailyDbCnt: %d]",
+                    strCode, threadNo, codeList.size(),
+                    infoCnt,
+                    timeCnt,
+                    dayCnt)
+        );
     }
 
     /**
