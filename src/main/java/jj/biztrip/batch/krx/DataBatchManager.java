@@ -81,7 +81,7 @@ public class DataBatchManager {
             dataGather.addCode(stockInfo.getStockCd());
 
             if (dataGather.getCodeList().size() % iGroupSize == 0){
-                executor.scheduleWithFixedDelay(dataGather, 1000, 20000, TimeUnit.MILLISECONDS);
+                executor.scheduleWithFixedDelay(dataGather, 1000, 10000, TimeUnit.MILLISECONDS);
                 dataGather = null;
             }else{
                 continue;
@@ -89,7 +89,7 @@ public class DataBatchManager {
         }
 
         if (dataGather != null){
-            executor.scheduleWithFixedDelay(dataGather, 1000, 20000, TimeUnit.MILLISECONDS);
+            executor.scheduleWithFixedDelay(dataGather, 1000, 10000, TimeUnit.MILLISECONDS);
         }
 
         logger.info("[TOTAL_DATA_GATHER_CNT][" + iDataGather + "]");
