@@ -22,7 +22,7 @@ spring: #스프링설정
         #connection-timeout: 300000
         idle-timeout: 200000
         minimum-idle: 0
-        maximum-pool-size: 50
+        maximum-pool-size: 55
         pool-name: yourPoolName
         auto-commit: false
       type: com.zaxxer.hikari.HikariDataSource
