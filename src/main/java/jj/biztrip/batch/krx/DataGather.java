@@ -61,6 +61,7 @@ public class DataGather extends BatchBase implements IDataGather {
         codeList.add(strCode);
     }
 
+    @Override
     public void run() {
         Date startDt = new Date();
 
