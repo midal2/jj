@@ -62,6 +62,7 @@ public class DataBatchManager {
         Step("#BATCH_START");
         ExceptionHandlingScheduledExecutor executor
                 = new ExceptionHandlingScheduledExecutor(iPoolSize, (final Thread t, final Throwable e) ->{
+                        logger.error("[ExceptionHandlingScheduledExecutor]" + e.getMessage());
                         e.printStackTrace();
                         });
 //        ExceptionHandlingScheduledExecutor executor = (ExceptionHandlingScheduledExecutor)Executors.newScheduledThreadPool(iPoolSize);
@@ -160,7 +161,7 @@ class MonitorThread implements Runnable{
             }
 
             logger.info(
-                    String.format("[##MONITOR##] [%d/%d] Active: %d, Done: %d, Canc: %d, Comp: %d, Task: %d, QueueSize : %d",
+                    String.format("[##MONITOR##] [%d/%d] Active: %d, Done: %d, Ccl: %d, Cpl: %d, Task: %d, QueueSize : %d",
                             this.executor.getPoolSize(),
                             this.executor.getCorePoolSize(),
                             this.executor.getActiveCount(),
