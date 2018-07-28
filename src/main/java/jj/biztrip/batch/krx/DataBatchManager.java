@@ -160,7 +160,7 @@ class MonitorThread implements Runnable{
             }
 
             logger.info(
-                    String.format("[##MONITOR##] [%d/%d] Active: %d, Done: %d, Cancel: %d, Completed: %d, Task: %d, QueueSize : %d, isShutdown: %s, isTerminated: %s",
+                    String.format("[##MONITOR##] [%d/%d] Active: %d, Done: %d, Canc: %d, Comp: %d, Task: %d, QueueSize : %d",
                             this.executor.getPoolSize(),
                             this.executor.getCorePoolSize(),
                             this.executor.getActiveCount(),
@@ -168,9 +168,8 @@ class MonitorThread implements Runnable{
                             iCancelTaskCnt,
                             this.executor.getCompletedTaskCount(),
                             this.executor.getTaskCount(),
-                            this.executor.getQueue().size(),
-                            this.executor.isShutdown(),
-                            this.executor.isTerminated()));
+                            this.executor.getQueue().size()
+                            ));
             try {
                 Thread.sleep(seconds*1000);
             } catch (InterruptedException e) {
