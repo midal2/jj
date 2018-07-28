@@ -60,11 +60,11 @@ public class DataBatchManager {
 
 
         Step("#BATCH_START");
-        ScheduledThreadPoolExecutor executor = (ScheduledThreadPoolExecutor)Executors.newScheduledThreadPool(iPoolSize);
+        ExceptionHandlingScheduledExecutor executor = (ExceptionHandlingScheduledExecutor)Executors.newScheduledThreadPool(iPoolSize);
         executor.setRejectedExecutionHandler(
                 (Runnable r, ThreadPoolExecutor e) ->{
                     DataGather dataGather = (DataGather)r;
-                    logger.error("rejectedExecution Occured!!![" + dataGather.getThreadNo() + "/" + dataGather.getCodeList() + "]");
+                    logger.error("REJECTED_EXECUTION OCCURED[" + dataGather.getThreadNo() + "/" + dataGather.getCodeList() + "]");
                 }
         );
 
