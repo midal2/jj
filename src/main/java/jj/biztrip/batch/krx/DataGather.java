@@ -25,7 +25,6 @@ import static jj.biztrip.comm.BizUtil.cLong;
 @Component
 @Scope("prototype")
 @Data
-@Transactional
 public class DataGather extends BatchBase implements IDataGather {
 
     @Autowired
@@ -56,6 +55,7 @@ public class DataGather extends BatchBase implements IDataGather {
     }
 
 
+    @Transactional
     public void run() {
         Date startDt = new Date();
 

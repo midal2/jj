@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -51,15 +52,14 @@ public class DataBatchManager {
     }
 
     private void startup() {
-        ScheduledThreadPoolExecutor executor = (ScheduledThreadPoolExecutor)Executors.newScheduledThreadPool(iPoolSize);
-        Step("주식정보대상 종목코드를 가져온다. " +
-                "PoolSize[" + executor.getPoolSize() + "]/ " +
-                "CorePoolSize[" + executor.getCorePoolSize() + "/" +
-                "MaximumPoolSize[" + executor.getMaximumPoolSize() + "/" +
-                "]");
+        Step("#GET STOCK_LIST FROM DB");
         List<StockInfo> listCode = getStockCodeList();
 
-        Step("종목코드별로 스케쥴내역을 등록한다");
+        Step("#CREATE BATCH_LIST FROM STOCK_LIST");
+        List<DataGather> batchList = getBatchList(listCode, iGroupSize);
+
+        Step("#BATCH_START");
+        ScheduledThreadPoolExecutor executor = (ScheduledThreadPoolExecutor)Executors.newScheduledThreadPool(iPoolSize);
         executor.setRejectedExecutionHandler(new RejectedExecutionHandler(){
             @Override
             public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
@@ -67,37 +67,54 @@ public class DataBatchManager {
                 logger.error("rejectedExecution Occured!!![" + dataGather.getThreadNo() + "/" + dataGather.getCodeList() + "]");
             }
         });
+        for(DataGather selectedDataGather:batchList){
+            executor.scheduleWithFixedDelay(selectedDataGather, 1000, iBatchInterval, TimeUnit.MILLISECONDS);
+            /*logger.info(
+                String.format("[##THREAD_CREATE_INFO##] [%d/%d] GatherCnt:%d, Active: %d, Completed: %d, Task: %d, QueueSize : %d, isShutdown: %s, isTerminated: %s",
+                        executor.getPoolSize(),
+                        executor.getCorePoolSize(),
+                        batchList.size(),
+                        executor.getActiveCount(),
+                        executor.getCompletedTaskCount(),
+                        executor.getTaskCount(),
+                        executor.getQueue().size(),
+                        executor.isShutdown(),
+                        executor.isTerminated())
+            );*/
 
+        }
+
+        Step("#BATCH_MONITORING_START");
         MonitorThread monitor = new MonitorThread(executor, 3);
         Thread monitorThread = new Thread(monitor);
         monitorThread.start();
+    }
 
-        DataGather dataGather = null;
+    private List<DataGather> getBatchList(List<StockInfo> listCode, int iGroupSize) {
+        List<DataGather> batchList = new LinkedList<>();
+
+        if (listCode == null || listCode.size() == 0){
+            return batchList;
+        }
+
         int iDataGather = 0;
+        DataGather dataGather = applicationContext.getBean(DataGather.class);
         for(StockInfo stockInfo:listCode){
-            if (dataGather == null){
-                dataGather = applicationContext.getBean(DataGather.class);
-                ++iDataGather;
-                dataGather.setThreadNo(Integer.toString(iDataGather));
-            }
-
             dataGather.addCode(stockInfo.getStockCd());
 
-            if (dataGather.getCodeList().size() % iGroupSize == 0){
-                executor.scheduleWithFixedDelay(dataGather, 1000, iBatchInterval, TimeUnit.MILLISECONDS);
-                dataGather = null;
-            }else{
-                continue;
+            if (dataGather.getCodeList().size() % iGroupSize == 0) {
+                batchList.add(dataGather);
+                ++iDataGather;
+                dataGather = applicationContext.getBean(DataGather.class);
+                dataGather.setThreadNo(Integer.toString(iDataGather));
             }
         }
 
         if (dataGather != null){
-            executor.scheduleWithFixedDelay(dataGather, 1000, iBatchInterval, TimeUnit.MILLISECONDS);
+            batchList.add(dataGather);
         }
 
-        logger.info("[TOTAL_DATA_GATHER_CNT][" + iDataGather + "]");
-
-
+        return batchList;
     }
 
     /**
