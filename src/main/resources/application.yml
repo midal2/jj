@@ -36,7 +36,7 @@ mybatis: #MyBatis 설정
 krx: #거래소
   url: "http://asp1.krx.co.kr/servlet/krx.asp.XMLSiseEng?code="
   poolSize : 1 #쓰레드풀갯수(DB컨넥션 고려)
-  groupSize : 3 #쓰레드당 처리할 종목코드수
+  groupSize : 3 #쓰레드당 처리할 종목코드수(DB컨넥션을 늘리기 힘들경우 종목코드를 늘리는 전략)
   batchInterval : 20000 # 배치 Interval(밀리세컨드)
 ---
 spring:

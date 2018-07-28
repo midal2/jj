@@ -12,7 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,6 +48,9 @@ public class DataGather extends BatchBase implements IDataGather {
     @Autowired
     private DataGatherDAO dataGatherDAO;
 
+    @Autowired
+    private PlatformTransactionManager transactionManager;
+
     public DataGather(){
         super();
         codeList = new LinkedList<>();
@@ -54,18 +61,23 @@ public class DataGather extends BatchBase implements IDataGather {
         codeList.add(strCode);
     }
 
-
-    @Transactional
     public void run() {
         Date startDt = new Date();
 
+        TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         try {
             int i = 0;
             for (String strCode : codeList) {
                 ++i;
+                TransactionStatus transactionStatus = null;
                 try {
+                    transactionStatus = transactionManager.getTransaction(transactionDefinition);
                     processStockInfo(i, strCode);
+                    transactionManager.commit(transactionStatus);
                 } catch (Exception e) {
+                    if (transactionStatus != null) {
+                        transactionManager.rollback(transactionStatus);
+                    }
                     logger.error("처리중오류 발생[" + strCode + "][" + strStepMsg + "][" + e.getMessage() + "]");
                 }
             }
