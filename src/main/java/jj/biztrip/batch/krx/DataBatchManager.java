@@ -60,7 +60,11 @@ public class DataBatchManager {
 
 
         Step("#BATCH_START");
-        ExceptionHandlingScheduledExecutor executor = (ExceptionHandlingScheduledExecutor)Executors.newScheduledThreadPool(iPoolSize);
+        ExceptionHandlingScheduledExecutor executor
+                = new ExceptionHandlingScheduledExecutor(iPoolSize, (final Thread t, final Throwable e) ->{
+                        e.printStackTrace();
+                        });
+//        ExceptionHandlingScheduledExecutor executor = (ExceptionHandlingScheduledExecutor)Executors.newScheduledThreadPool(iPoolSize);
         executor.setRejectedExecutionHandler(
                 (Runnable r, ThreadPoolExecutor e) ->{
                     DataGather dataGather = (DataGather)r;
