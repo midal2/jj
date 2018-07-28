@@ -62,7 +62,7 @@ public class ExceptionHandlingScheduledExecutor extends ScheduledThreadPoolExecu
                     runnable.run();
                 } catch (final Throwable t) {
                     logger.error("[##MONITOR##] Runable Exception Occur:[" + t.getMessage() + "]");
-                    ueh.uncaughtException(Thread.currentThread(), t);
+                    //ueh.uncaughtException(Thread.currentThread(), t);
                     throw t;
                 }
             }
@@ -77,7 +77,7 @@ public class ExceptionHandlingScheduledExecutor extends ScheduledThreadPoolExecu
                     return callable.call();
                 } catch (Throwable t) {
                     logger.error("[##MONITOR##] Runable Exception Occur:[" + t.getMessage() + "]");
-                    ueh.uncaughtException(Thread.currentThread(), t);
+                    //ueh.uncaughtException(Thread.currentThread(), t);
                     throw t;
                 }
             }

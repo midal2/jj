@@ -40,6 +40,8 @@ public class DataBatchManager {
         logger = LoggerFactory.getLogger(this.getClass().getName());
     }
 
+    private ExceptionHandlingScheduledExecutor executor;
+
     @EventListener
     public void onApplicationEvent(ApplicationEvent applicationEvent) {
         if (applicationEvent.getClass() == ApplicationReadyEvent.class){
@@ -60,8 +62,7 @@ public class DataBatchManager {
 
 
         Step("#BATCH_START");
-        ExceptionHandlingScheduledExecutor executor
-                = new ExceptionHandlingScheduledExecutor(iPoolSize, (final Thread t, final Throwable e) ->{
+        executor = new ExceptionHandlingScheduledExecutor(iPoolSize, (final Thread t, final Throwable e) ->{
                         logger.error("[##MONITOR##][ExceptionHandlingScheduledExecutor]" + e.getMessage());
                         e.printStackTrace();
                         });
