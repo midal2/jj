@@ -66,14 +66,13 @@ public class DataGather extends BatchBase implements IDataGather {
         Date startDt = new Date();
 
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+        TransactionStatus transactionStatus = null;
         try {
             int i = 0;
             for (String strCode : codeList) {
-                ++i;
-                TransactionStatus transactionStatus = null;
                 try {
                     transactionStatus = transactionManager.getTransaction(transactionDefinition);
-                    processStockInfo(i, strCode);
+                    processStockInfo(++i, strCode);
                     transactionManager.commit(transactionStatus);
                 } catch (Exception e) {
                     if (transactionStatus != null) {
