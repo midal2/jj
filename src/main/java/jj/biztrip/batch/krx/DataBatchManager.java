@@ -58,34 +58,23 @@ public class DataBatchManager {
         Step("#CREATE BATCH_LIST FROM STOCK_LIST");
         List<DataGather> batchList = getBatchList(listCode, iGroupSize);
 
+
         Step("#BATCH_START");
         ScheduledThreadPoolExecutor executor = (ScheduledThreadPoolExecutor)Executors.newScheduledThreadPool(iPoolSize);
-        executor.setRejectedExecutionHandler(new RejectedExecutionHandler(){
-            @Override
-            public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
-                DataGather dataGather = (DataGather)r;
-                logger.error("rejectedExecution Occured!!![" + dataGather.getThreadNo() + "/" + dataGather.getCodeList() + "]");
-            }
-        });
-        for(DataGather selectedDataGather:batchList){
-            executor.scheduleWithFixedDelay(selectedDataGather, 1000, iBatchInterval, TimeUnit.MILLISECONDS);
-            /*logger.info(
-                String.format("[##THREAD_CREATE_INFO##] [%d/%d] GatherCnt:%d, Active: %d, Completed: %d, Task: %d, QueueSize : %d, isShutdown: %s, isTerminated: %s",
-                        executor.getPoolSize(),
-                        executor.getCorePoolSize(),
-                        batchList.size(),
-                        executor.getActiveCount(),
-                        executor.getCompletedTaskCount(),
-                        executor.getTaskCount(),
-                        executor.getQueue().size(),
-                        executor.isShutdown(),
-                        executor.isTerminated())
-            );*/
+        executor.setRejectedExecutionHandler(
+                (Runnable r, ThreadPoolExecutor e) ->{
+                    DataGather dataGather = (DataGather)r;
+                    logger.error("rejectedExecution Occured!!![" + dataGather.getThreadNo() + "/" + dataGather.getCodeList() + "]");
+                }
+        );
 
+        List<ScheduledFuture> scheduledFutures =  new LinkedList<>();
+        for(DataGather selectedDataGather:batchList){
+            scheduledFutures.add(executor.scheduleWithFixedDelay(selectedDataGather, 1000, iBatchInterval, TimeUnit.MILLISECONDS));
         }
 
         Step("#BATCH_MONITORING_START");
-        MonitorThread monitor = new MonitorThread(executor, 3);
+        MonitorThread monitor = new MonitorThread(executor, scheduledFutures, 3);
         Thread monitorThread = new Thread(monitor);
         monitorThread.start();
     }
@@ -135,11 +124,14 @@ public class DataBatchManager {
 class MonitorThread implements Runnable{
     private ThreadPoolExecutor executor;
     private int seconds;
+    private List<ScheduledFuture> scheduledFuture;
     private Boolean run = true;
-    public MonitorThread(ThreadPoolExecutor executor, int seconds) {
+
+    public MonitorThread(ThreadPoolExecutor executor, List<ScheduledFuture> scheduledFutures, int seconds) {
         super();
         this.executor = executor;
         this.seconds = seconds;
+        this.scheduledFuture = scheduledFuture;
     }
 
     public void shutDown() {
@@ -150,11 +142,19 @@ class MonitorThread implements Runnable{
     public void run() {
         Logger logger = LoggerFactory.getLogger(this.getClass().getName());
         while (run) {
+
+            int iCancelTaskCnt = 0;
+            for (ScheduledFuture scheduledFuture : scheduledFuture) {
+                if (scheduledFuture.isCancelled()){
+                    ++iCancelTaskCnt;
+                }
+            }
             logger.info(
-                    String.format("[##MONITOR##] [%d/%d] Active: %d, Completed: %d, Task: %d, QueueSize : %d, isShutdown: %s, isTerminated: %s",
+                    String.format("[##MONITOR##] [%d/%d] Active: %d, Cancel: %d, Completed: %d, Task: %d, QueueSize : %d, isShutdown: %s, isTerminated: %s",
                             this.executor.getPoolSize(),
                             this.executor.getCorePoolSize(),
                             this.executor.getActiveCount(),
+                            iCancelTaskCnt,
                             this.executor.getCompletedTaskCount(),
                             this.executor.getTaskCount(),
                             this.executor.getQueue().size(),
