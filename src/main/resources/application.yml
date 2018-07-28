@@ -48,7 +48,7 @@ logging:
     jj.biztrip.batch.krx.DataBatchManager: INFO
 krx: #거래소
   poolSize : 50 #쓰레드풀갯수(DB컨넥션 고려)
-  groupSize : 4 #쓰레드당 처리할 종목코드수(DB컨넥션을 늘리기 힘들경우 종목코드를 늘리는 전략)
+  groupSize : 1 #쓰레드당 처리할 종목코드수(DB컨넥션을 늘리기 힘들경우 종목코드를 늘리는 전략)
   batchInterval : 15000 # 배치 Interval(밀리세컨드)
 ---
 spring:
@@ -64,6 +64,6 @@ logging:
     jj.biztrip.batch.krx.DataBatchManaeger: INFO
 krx: #거래소
   poolSize : 50 #쓰레드풀갯수(DB컨넥션 고려)
-  groupSize : 1 #쓰레드당 처리할 종목코드수
+  groupSize : 2 #쓰레드당 처리할 종목코드수
   batchInterval : 15000 # 배치 Interval(밀리세컨드)
 
