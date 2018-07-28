@@ -71,25 +71,27 @@ public class DataGather extends BatchBase implements IDataGather {
     public void run() {
         Date startDt = new Date();
 
-        TransactionStatus transactionStatus = null;
         try {
             int i = 0;
-            TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+            TransactionStatus transactionStatus = null;
             DataSourceTransactionManager transactionManager = new DataSourceTransactionManager(dataSource);
-            transactionStatus = transactionManager.getTransaction(transactionDefinition);
+            TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
             for (String strCode : codeList) {
                 try {
+                    transactionStatus = transactionManager.getTransaction(transactionDefinition);
+
                     processStockInfo(++i, strCode);
+
+                    transactionManager.commit(transactionStatus);
                 } catch (Exception e) {
                     logger.error("처리중오류 발생[" + strCode + "][" + strStepMsg + "][" + e.getMessage() + "]");
+                    if (transactionStatus != null) {
+                        transactionManager.rollback(transactionStatus);
+                    }
                 }
             }
-            transactionManager.commit(transactionStatus);
         }catch (Throwable e) {
             logger.error("[THREAD_NO][" + threadNo + "] 중 오류발생[" + e.getMessage() + "]");
-            if (transactionStatus != null) {
-                transactionManager.rollback(transactionStatus);
-            }
         }
 
         Date endDt = new Date();
