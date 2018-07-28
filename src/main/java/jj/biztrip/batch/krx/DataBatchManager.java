@@ -146,6 +146,7 @@ class MonitorThread implements Runnable{
             int iCancelTaskCnt = 0;
             int iDoneTaskCnt = 0;
             for (ScheduledFuture scheduledFuture : scheduledFuture) {
+
                 if (scheduledFuture.isCancelled()){
                     ++iCancelTaskCnt;
                 }
