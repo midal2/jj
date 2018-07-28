@@ -144,16 +144,22 @@ class MonitorThread implements Runnable{
         while (run) {
 
             int iCancelTaskCnt = 0;
+            int iDoneTaskCnt = 0;
             for (ScheduledFuture scheduledFuture : scheduledFuture) {
                 if (scheduledFuture.isCancelled()){
                     ++iCancelTaskCnt;
                 }
+                if (scheduledFuture.isDone()){
+                    ++iDoneTaskCnt;
+                }
             }
+
             logger.info(
-                    String.format("[##MONITOR##] [%d/%d] Active: %d, Cancel: %d, Completed: %d, Task: %d, QueueSize : %d, isShutdown: %s, isTerminated: %s",
+                    String.format("[##MONITOR##] [%d/%d] Active: %d, Done: %d, Cancel: %d, Completed: %d, Task: %d, QueueSize : %d, isShutdown: %s, isTerminated: %s",
                             this.executor.getPoolSize(),
                             this.executor.getCorePoolSize(),
                             this.executor.getActiveCount(),
+                            iDoneTaskCnt,
                             iCancelTaskCnt,
                             this.executor.getCompletedTaskCount(),
                             this.executor.getTaskCount(),
