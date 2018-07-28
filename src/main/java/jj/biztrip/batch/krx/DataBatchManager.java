@@ -131,7 +131,7 @@ class MonitorThread implements Runnable{
         super();
         this.executor = executor;
         this.seconds = seconds;
-        this.scheduledFuture = scheduledFuture;
+        this.scheduledFuture = scheduledFutures;
     }
 
     public void shutDown() {
@@ -144,11 +144,11 @@ class MonitorThread implements Runnable{
         while (run) {
 
             int iCancelTaskCnt = 0;
-            /*for (ScheduledFuture scheduledFuture : scheduledFuture) {
+            for (ScheduledFuture scheduledFuture : scheduledFuture) {
                 if (scheduledFuture.isCancelled()){
                     ++iCancelTaskCnt;
                 }
-            }*/
+            }
             logger.info(
                     String.format("[##MONITOR##] [%d/%d] Active: %d, Cancel: %d, Completed: %d, Task: %d, QueueSize : %d, isShutdown: %s, isTerminated: %s",
                             this.executor.getPoolSize(),
