@@ -9,15 +9,17 @@ import jj.biztrip.comm.BizService;
 import jj.biztrip.comm.BizServiceType;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
+import javax.sql.DataSource;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
@@ -51,6 +53,10 @@ public class DataGather extends BatchBase implements IDataGather {
     @Autowired
     private PlatformTransactionManager transactionManager;
 
+    @Qualifier("dataSource")
+    @Autowired
+    DataSource dataSource;
+
     public DataGather(){
         super();
         codeList = new LinkedList<>();
@@ -65,24 +71,25 @@ public class DataGather extends BatchBase implements IDataGather {
     public void run() {
         Date startDt = new Date();
 
-        TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = null;
         try {
             int i = 0;
+            TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+            DataSourceTransactionManager transactionManager = new DataSourceTransactionManager(dataSource);
+            transactionStatus = transactionManager.getTransaction(transactionDefinition);
             for (String strCode : codeList) {
                 try {
-                    transactionStatus = transactionManager.getTransaction(transactionDefinition);
                     processStockInfo(++i, strCode);
-                    transactionManager.commit(transactionStatus);
                 } catch (Exception e) {
-                    if (transactionStatus != null) {
-                        transactionManager.rollback(transactionStatus);
-                    }
                     logger.error("처리중오류 발생[" + strCode + "][" + strStepMsg + "][" + e.getMessage() + "]");
                 }
             }
+            transactionManager.commit(transactionStatus);
         }catch (Throwable e) {
             logger.error("[THREAD_NO][" + threadNo + "] 중 오류발생[" + e.getMessage() + "]");
+            if (transactionStatus != null) {
+                transactionManager.rollback(transactionStatus);
+            }
         }
 
         Date endDt = new Date();
