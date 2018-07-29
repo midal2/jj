@@ -6,6 +6,7 @@ import java.util.Date;
 
 @Data
 public class StockInfo {
+    private long idx;
     private String StockCd      ;
     private String JongName     ;
     private long CurJuka      ;

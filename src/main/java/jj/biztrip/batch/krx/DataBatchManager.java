@@ -9,6 +9,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
@@ -35,6 +36,9 @@ public class DataBatchManager {
     @Value("${krx.batchInterval}")
     private int iBatchInterval;
 
+    @Autowired
+    private Environment env;
+
     public DataBatchManager(){
         super();
         logger = LoggerFactory.getLogger(this.getClass().getName());
@@ -46,11 +50,27 @@ public class DataBatchManager {
     public void onApplicationEvent(ApplicationEvent applicationEvent) {
         if (applicationEvent.getClass() == ApplicationReadyEvent.class){
             try {
-                startup();
+                //local에선 배치기동 안함
+                if (!isLocalProfile()) {
+                    startup();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private boolean isLocalProfile() {
+        boolean result = false;
+        String[] profiles = env.getActiveProfiles();
+        for(String selecteProfile:profiles){
+            if("local".equals(selecteProfile)){
+                result = true;
+                break;
+            }
+        }
+
+        return  result;
     }
 
     private void startup() {

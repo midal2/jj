@@ -81,7 +81,7 @@ public class DataGather extends BatchBase implements IDataGather {
                 /*
                 @Transaction 어노테이션을 사용안함
                 - 사용할 경우 초기 SpringContainer 생성시 AOP로 인한 bean 생성속도가 느림.
-                - 배치를 위한 Bean이 1000개 이상생성되므로 초기 SpringContainer 구성시 Transaction AOP가 부적합함
+                - 배치를 위한 Bean이 1000개 이상생성되므로 초기 SpringContainer 구성시 Transaction AOP가 부적합함ㅣ
                 - AOP 적용으로 인해 bean속도가 느려서 수동으로 구성.
 
                 ##@Transaction 구성시 AOP로 인한 추가 생성된 로직에서 오류처리시

@@ -31,6 +31,34 @@ public class HttpBizService implements BizService<Map<String, Object>> {
         return send(url, sendStr, BizServiceType.JSON, "");
     }
 
+    /**
+     * 유형별 응답메세지를 생성한다
+     * @param temp
+     * @param type
+     * @return
+     * @throws IOException
+     */
+    private Map<String,Object> getResultMap(String temp, BizServiceType type, String etcInfo) throws IOException {
+        Map<String,Object> resultMap = new HashMap();
+
+        switch(type) {
+            case JSON:
+                ObjectMapper om = new ObjectMapper();
+                resultMap = om.readValue(temp, new TypeReference<Map<String, Object>>(){});
+                break;
+            case XML:
+                XmlMapper xmlMapper = new XmlMapper();
+                xmlMapper.setConfig(xmlMapper.getSerializationConfig().withRootName(etcInfo));
+                String strXml = temp.replace("<?xml version=\"1.0\" encoding=\"utf-8\" ?>", "");
+                resultMap = (Map<String,Object>)xmlMapper.readValue(strXml, GenericObject.class);
+                break;
+            default:
+                break;
+        }
+
+        return resultMap;
+    }
+
     @Override
     public Map<String, Object> send(String url, String sendStr, BizServiceType type, String etcInfo) {
         Map<String, Object> resultMap = new HashMap();
@@ -93,38 +121,10 @@ public class HttpBizService implements BizService<Map<String, Object>> {
 
         return resultMap;
     }
-
-    /**
-     * 유형별 응답메세지를 생성한다
-     * @param temp
-     * @param type
-     * @return
-     * @throws IOException
-     */
-    private Map<String,Object> getResultMap(String temp, BizServiceType type, String etcInfo) throws IOException {
-        Map<String,Object> resultMap = new HashMap();
-
-        switch(type) {
-            case JSON:
-                ObjectMapper om = new ObjectMapper();
-                resultMap = om.readValue(temp, new TypeReference<Map<String, Object>>(){});
-                break;
-            case XML:
-                XmlMapper xmlMapper = new XmlMapper();
-                xmlMapper.setConfig(xmlMapper.getSerializationConfig().withRootName(etcInfo));
-                String strXml = temp.replace("<?xml version=\"1.0\" encoding=\"utf-8\" ?>", "");
-                resultMap = (Map<String,Object>)xmlMapper.readValue(strXml, GenericObject.class);
-                break;
-            default:
-                break;
-        }
-
-        return resultMap;
-    }
-
     @JsonDeserialize(using = CustomDeserializer.class)
     public class GenericObject
     {
+
     }
 
     public static class CustomDeserializer extends UntypedObjectDeserializer

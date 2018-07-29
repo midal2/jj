@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="jj.biztrip.svc.stock.StockDAO">
+
+    <select id="getAllStockInfo" resultType="jj.biztrip.batch.krx.model.StockInfo">
+        SELECT `TBL_StockInfo`.`idx`,
+            `TBL_StockInfo`.`StockCd`,
+            `TBL_StockInfo`.`JongName`,
+            `TBL_StockInfo`.`CurJuka`,
+            `TBL_StockInfo`.`Debi`,
+            `TBL_StockInfo`.`DungRak`,
+            `TBL_StockInfo`.`PrevJuka`,
+            `TBL_StockInfo`.`Volume`,
+            `TBL_StockInfo`.`Money`,
+            `TBL_StockInfo`.`StartJuka`,
+            `TBL_StockInfo`.`HighJuka`,
+            `TBL_StockInfo`.`LowJuka`,
+            `TBL_StockInfo`.`High52`,
+            `TBL_StockInfo`.`Low52`,
+            `TBL_StockInfo`.`UpJuka`,
+            `TBL_StockInfo`.`DownJuka`,
+            `TBL_StockInfo`.`Per`,
+            `TBL_StockInfo`.`Amount`,
+            `TBL_StockInfo`.`FaceJuka`,
+            `TBL_StockInfo`.`CreateDt`,
+            `TBL_StockInfo`.`UpdateDt`
+        FROM `mydb`.`TBL_StockInfo`;
+    </select>
+
+</mapper>
