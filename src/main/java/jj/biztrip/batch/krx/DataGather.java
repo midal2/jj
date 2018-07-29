@@ -78,6 +78,15 @@ public class DataGather extends BatchBase implements IDataGather {
             DataSourceTransactionManager transactionManager = new DataSourceTransactionManager(dataSource);
             TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
             for (String strCode : codeList) {
+                /*
+                @Transaction 어노테이션을 사용안함
+                - 사용할 경우 초기 SpringContainer 생성시 AOP로 인한 bean 생성속도가 느림.
+                - 배치를 위한 Bean이 1000개 이상생성되므로 초기 SpringContainer 구성시
+                - AOP 적용으로 인해 bean속도가 느려서 수동으로 구성.
+
+                ##@Transaction 구성시 AOP로 인한 추가 생성된 로직에서 오류처리시
+                UncaughtException의 발생이 가능하므로 오류보완처리에 대한 전략필요
+                */
                 try {
                     transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
@@ -92,14 +101,15 @@ public class DataGather extends BatchBase implements IDataGather {
                 }
             }
         }catch (Throwable e) {
-            logger.error("[THREAD_NO][" + threadNo + "] 중 오류발생[" + e.getMessage() + "]");
+            logger.error("[THREAD_NO][" + threadNo + "]" + getCodeList() + " 중 오류발생[" + e.getMessage() + "]");
         }
 
         Date endDt = new Date();
 
         logger.info(
-                String.format("[THREAD_NO][%s] stTime: %s, edTime: %s, runTime %d second",
+                String.format("[THREAD_NO][%s]%s stTime: %s, edTime: %s, runTime %d second",
                         threadNo,
+                        getCodeList(),
                         sd.format(startDt),
                         sd.format(endDt),
                         ((endDt.getTime() - startDt.getTime()) / 1000)

@@ -31,8 +31,7 @@ public class ExceptionHandlingScheduledExecutor extends ScheduledThreadPoolExecu
 
     @Override
     public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit) {
-        return super.scheduleWithFixedDelay(command, initialDelay, delay, unit);
-//        return super.scheduleWithFixedDelay(wrap(command), initialDelay, delay, unit);
+        return super.scheduleWithFixedDelay(wrap(command), initialDelay, delay, unit);
     }
 
     @Override
@@ -56,32 +55,27 @@ public class ExceptionHandlingScheduledExecutor extends ScheduledThreadPoolExecu
     }
 
     private Runnable wrap(final Runnable runnable) {
-        return new Runnable() {
-            @Override
-            public void run() {
+        return () -> {
                 try {
                     runnable.run();
                 } catch (final Throwable t) {
-                    logger.error("[##MONITOR##] Runable Exception Occur:[" + t.getMessage() + "]");
-                    //ueh.uncaughtException(Thread.currentThread(), t);
-                    //throw t;
+                    DataGather dataGather = (DataGather)runnable;
+                    logger.error("[##MONITOR##] UNCAUGHT_EXCEPTION Occur:" + dataGather.getCodeList() + "[" + t.getMessage() + "]");
+                    ueh.uncaughtException(Thread.currentThread(), t);
+                    //throw t; # 주석 해제할경우 Task가 종료되서 이후 스케쥴링이 기동을 안하니 판단후 주석해제
                 }
-            }
-        };
+            };
     }
 
     private <T> Callable<T> wrap(final Callable<T> callable) {
-        return new Callable<T>() {
-            @Override
-            public T call() throws Exception {
+        return () -> {
                 try {
                     return callable.call();
                 } catch (Throwable t) {
-                    logger.error("[##MONITOR##] Runable Exception Occur:[" + t.getMessage() + "]");
-                    //ueh.uncaughtException(Thread.currentThread(), t);
+                    logger.error("[##MONITOR##] UNCAUGHT_EXCEPTION Occur:["+ t.getMessage() + "]");
+                    ueh.uncaughtException(Thread.currentThread(), t);
                     throw t;
                 }
-            }
-        };
+            };
     }
 }

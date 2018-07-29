@@ -22,7 +22,7 @@ spring: #스프링설정
         connection-timeout: 40000
         idle-timeout: 200000
         minimum-idle: 0
-        maximum-pool-size: 55
+        maximum-pool-size: 55 #실제 DB에서 제공가능한 최대Connection수를 초과하지 않도록 구성
         pool-name: yourPoolName
         auto-commit: false
       type: com.zaxxer.hikari.HikariDataSource
@@ -35,8 +35,8 @@ mybatis: #MyBatis 설정
     auto-mapping-behavior: full
 krx: #거래소
   url: "http://asp1.krx.co.kr/servlet/krx.asp.XMLSiseEng?code="
-  poolSize : 1 #쓰레드풀갯수(DB컨넥션 고려)
-  groupSize : 3 #쓰레드당 처리할 종목코드수(DB컨넥션을 늘리기 힘들경우 종목코드를 늘리는 전략)
+  poolSize : 1 #쓰레드풀갯수(maximum-pool-size 갯수을 고려해서 구성/초과할경우 DB Timeout의 가능성을 고려해야함)
+  groupSize : 3 #쓰레드당 처리할 종목코드수(poolSize를 더이상 늘리기 힘들경우 종목코드를 늘리는 전략을 고려해야함)
   batchInterval : 20000 # 배치 Interval(밀리세컨드)
 ---
 spring:
@@ -47,8 +47,8 @@ logging:
     jj.biztrip.batch.krx.DataGather: INFO
     jj.biztrip.batch.krx.DataBatchManager: INFO
 krx: #거래소
-  poolSize : 50 #쓰레드풀갯수(DB컨넥션 고려)
-  groupSize : 1 #쓰레드당 처리할 종목코드수(DB컨넥션을 늘리기 힘들경우 종목코드를 늘리는 전략)
+  poolSize : 50 #쓰레드풀갯수(maximum-pool-size 갯수을 고려해서 구성/초과할경우 DB Timeout의 가능성을 고려해야함)
+  groupSize : 3 #쓰레드당 처리할 종목코드수(poolSize를 더이상 늘리기 힘들경우 종목코드를 늘리는 전략을 고려해야함)
   batchInterval : 15000 # 배치 Interval(밀리세컨드)
 ---
 spring:
@@ -63,7 +63,7 @@ logging:
     jj.biztrip.batch.krx.DataGather: INFO
     jj.biztrip.batch.krx.DataBatchManaeger: INFO
 krx: #거래소
-  poolSize : 150 #쓰레드풀갯수(DB컨넥션 고려)
-  groupSize : 2 #쓰레드당 처리할 종목코드수
+  poolSize : 50 #쓰레드풀갯수(maximum-pool-size 갯수을 고려해서 구성/초과할경우 DB Timeout의 가능성을 고려해야함)
+  groupSize : 1 #쓰레드당 처리할 종목코드수(poolSize를 더이상 늘리기 힘들경우 종목코드를 늘리는 전략을 고려해야함)
   batchInterval : 15000 # 배치 Interval(밀리세컨드)
 
