@@ -23,8 +23,8 @@
             `TBL_StockInfo`.`Per`,
             `TBL_StockInfo`.`Amount`,
             `TBL_StockInfo`.`FaceJuka`,
-            `TBL_StockInfo`.`CreateDt`,
-            `TBL_StockInfo`.`UpdateDt`
+            date_format(`TBL_StockInfo`.`CreateDt`, '%Y%m%d%H%i%s') as CreateDt,
+            date_format(`TBL_StockInfo`.`UpdateDt`, '%Y%m%d%H%i%s') as UpdateDt
         FROM `mydb`.`TBL_StockInfo`;
     </select>
 
