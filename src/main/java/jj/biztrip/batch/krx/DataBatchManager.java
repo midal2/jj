@@ -66,7 +66,6 @@ public class DataBatchManager {
                         logger.error("[##MONITOR##][ExceptionHandlingScheduledExecutor]" + e.getMessage());
                         e.printStackTrace();
                         });
-//        ExceptionHandlingScheduledExecutor executor = (ExceptionHandlingScheduledExecutor)Executors.newScheduledThreadPool(iPoolSize);
         executor.setRejectedExecutionHandler(
                 (Runnable r, ThreadPoolExecutor e) ->{
                     DataGather dataGather = (DataGather)r;

@@ -31,7 +31,8 @@ public class ExceptionHandlingScheduledExecutor extends ScheduledThreadPoolExecu
 
     @Override
     public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit) {
-        return super.scheduleWithFixedDelay(wrap(command), initialDelay, delay, unit);
+        return super.scheduleWithFixedDelay(command, initialDelay, delay, unit);
+//        return super.scheduleWithFixedDelay(wrap(command), initialDelay, delay, unit);
     }
 
     @Override
