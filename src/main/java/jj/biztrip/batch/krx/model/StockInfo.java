@@ -2,8 +2,6 @@ package jj.biztrip.batch.krx.model;
 
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
 public class StockInfo {
     private long idx;
@@ -22,9 +20,9 @@ public class StockInfo {
     private long Low52        ;
     private long UpJuka       ;
     private long DownJuka     ;
-    private String Per          ;
+    private String Per        ;
     private long Amount       ;
     private long FaceJuka     ;
-    private Date CreateDt     ;
-    private Date UpdateDt   ;
+    private String CreateDt   ;
+    private String UpdateDt   ;
 }
