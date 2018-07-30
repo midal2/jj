@@ -50,8 +50,8 @@ public class DataBatchManager {
     public void onApplicationEvent(ApplicationEvent applicationEvent) {
         if (applicationEvent.getClass() == ApplicationReadyEvent.class){
             try {
-                //local에선 배치기동 안함
-                if (!isLocalProfile()) {
+
+                if (canStartBatch()) {
                     startup();
                 }
             } catch (Exception e) {
@@ -60,11 +60,12 @@ public class DataBatchManager {
         }
     }
 
-    private boolean isLocalProfile() {
+    private boolean canStartBatch() {
         boolean result = false;
+
         String[] profiles = env.getActiveProfiles();
         for(String selecteProfile:profiles){
-            if("local".equals(selecteProfile)){
+            if("real".equals(selecteProfile)){
                 result = true;
                 break;
             }
