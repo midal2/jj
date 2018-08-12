@@ -35,9 +35,9 @@ mybatis: #MyBatis 설정
     auto-mapping-behavior: full
 krx: #거래소
   url: "http://asp1.krx.co.kr/servlet/krx.asp.XMLSiseEng?code="
-  poolSize : 1 #쓰레드풀갯수(maximum-pool-size 갯수을 고려해서 구성/초과할경우 DB Timeout의 가능성을 고려해야함)
-  groupSize : 3 #쓰레드당 처리할 종목코드수(poolSize를 더이상 늘리기 힘들경우 종목코드를 늘리는 전략을 고려해야함)
-  batchInterval : 20000 # 배치 Interval(밀리세컨드)
+  poolSize: 1 #쓰레드풀갯수(maximum-pool-size 갯수을 고려해서 구성/초과할경우 DB Timeout의 가능성을 고려해야함)
+  groupSize: 3 #쓰레드당 처리할 종목코드수(poolSize를 더이상 늘리기 힘들경우 종목코드를 늘리는 전략을 고려해야함)
+  batchInterval: 20000 # 배치 Interval(밀리세컨드)
 ---
 spring:
   profiles: local
@@ -47,9 +47,9 @@ logging:
     jj.biztrip.batch.krx.DataGather: INFO
     jj.biztrip.batch.krx.DataBatchManager: INFO
 krx: #거래소
-  poolSize : 50 #쓰레드풀갯수(maximum-pool-size 갯수을 고려해서 구성/초과할경우 DB Timeout의 가능성을 고려해야함)
-  groupSize : 3 #쓰레드당 처리할 종목코드수(poolSize를 더이상 늘리기 힘들경우 종목코드를 늘리는 전략을 고려해야함)
-  batchInterval : 15000 # 배치 Interval(밀리세컨드)
+  poolSize: 50 #쓰레드풀갯수(maximum-pool-size 갯수을 고려해서 구성/초과할경우 DB Timeout의 가능성을 고려해야함)
+  groupSize: 3 #쓰레드당 처리할 종목코드수(poolSize를 더이상 늘리기 힘들경우 종목코드를 늘리는 전략을 고려해야함)
+  batchInterval: 15000 # 배치 Interval(밀리세컨드)
 ---
 spring:
   profiles: dev
@@ -62,9 +62,9 @@ logging:
     jj.biztrip.batch.krx.DataGather: DEBUG
     jj.biztrip.batch.krx.DataBatchManaeger: INFO
 krx: #거래소
-  poolSize : 50 #쓰레드풀갯수(maximum-pool-size 갯수을 고려해서 구성/초과할경우 DB Timeout의 가능성을 고려해야함)
-  groupSize : 1 #쓰레드당 처리할 종목코드수(poolSize를 더이상 늘리기 힘들경우 종목코드를 늘리는 전략을 고려해야함)
-  batchInterval : 15000 # 배치 Interval(밀리세컨드)
+  poolSize: 50 #쓰레드풀갯수(maximum-pool-size 갯수을 고려해서 구성/초과할경우 DB Timeout의 가능성을 고려해야함)
+  groupSize: 1 #쓰레드당 처리할 종목코드수(poolSize를 더이상 늘리기 힘들경우 종목코드를 늘리는 전략을 고려해야함)
+  batchInterval: 15000 # 배치 Interval(밀리세컨드)
 ---
 spring:
   profiles: real_web
