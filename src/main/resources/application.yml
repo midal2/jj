@@ -60,7 +60,7 @@ spring:
 logging:
   level:
     jj.biztrip.batch.krx.DataGatherDAO: ERROR
-    jj.biztrip.batch.krx.DataGather: INFO
+    jj.biztrip.batch.krx.DataGather: DEBUG
     jj.biztrip.batch.krx.DataBatchManaeger: INFO
 krx: #거래소
   poolSize : 50 #쓰레드풀갯수(maximum-pool-size 갯수을 고려해서 구성/초과할경우 DB Timeout의 가능성을 고려해야함)
