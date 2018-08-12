@@ -1,5 +1,6 @@
 package jj.biztrip.batch.krx;
 
+import com.zaxxer.hikari.HikariDataSource;
 import jj.biztrip.batch.BatchBase;
 import jj.biztrip.batch.krx.model.DailyStock;
 import jj.biztrip.batch.krx.model.IDataGather;
@@ -53,9 +54,8 @@ public class DataGather extends BatchBase implements IDataGather {
     @Autowired
     private PlatformTransactionManager transactionManager;
 
-    @Qualifier("dataSource")
     @Autowired
-    DataSource dataSource;
+    HikariDataSource dataSource;
 
     public DataGather(){
         super();
