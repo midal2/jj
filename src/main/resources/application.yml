@@ -56,7 +56,6 @@ spring:
 ---
 spring:
   profiles: real
-  datasource:
 logging:
   level:
     jj.biztrip.batch.krx.DataGatherDAO: ERROR
