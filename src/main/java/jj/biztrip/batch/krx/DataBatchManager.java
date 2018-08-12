@@ -65,7 +65,7 @@ public class DataBatchManager {
 
         String[] profiles = env.getActiveProfiles();
         for(String selecteProfile:profiles){
-            if("real".equals(selecteProfile)){
+            if("real".equals(selecteProfile) || "local".equals(selecteProfile)){
                 result = true;
                 break;
             }

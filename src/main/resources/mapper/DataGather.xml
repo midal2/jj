@@ -9,7 +9,7 @@
         FROM
           TBL_StockInfo;
     </select>
-    <insert id="insertTBL_TimeConclude" parameterType="hashmap" useGeneratedKeys="true" keyProperty="idx">
+    <insert id="insertTBL_TimeConclude" parameterType="hashmap">
         INSERT INTO `mydb`.`TBL_TimeConclude`
             (`StockCd`,
             `StockDt`,
@@ -69,7 +69,7 @@
 
     </update>
 
-    <insert id="insertTBL_DailyStock" parameterType="hashmap" useGeneratedKeys="true" keyProperty="idx">
+    <insert id="insertTBL_DailyStock" parameterType="hashmap">
         INSERT INTO `mydb`.`TBL_DailyStock`
             (`StockCd`,
             `day_Date`,

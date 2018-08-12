@@ -4,7 +4,7 @@
 <mapper namespace="jj.biztrip.svc.stock.StockDAO">
 
     <select id="getAllStockInfo" resultType="jj.biztrip.batch.krx.model.StockInfo">
-        SELECT `TBL_StockInfo`.`idx`,
+        SELECT
             `TBL_StockInfo`.`StockCd`,
             `TBL_StockInfo`.`JongName`,
             `TBL_StockInfo`.`CurJuka`,
