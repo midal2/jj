@@ -42,8 +42,8 @@
         </rollingPolicy>
     </appender>
 
-    <logger name="jj.biztrip" level="error" additivity="false">
-        <appender-ref ref="ROLLING_ERROR" />
+    <logger name="jj.biztrip" level="debug" additivity="false">
+        <appender-ref ref="ROLLING" />
     </logger>
 
     <logger name="jj.biztrip.batch"  level="debug" additivity="true">
